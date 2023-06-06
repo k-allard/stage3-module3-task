@@ -34,9 +34,14 @@ public class DataInitializer {
         List<String> lines = readLinesFromFile(FILENAME_AUTHORS);
 
         for (String line : lines) {
-            authorList.add(new Author(++authorIdSequence, line));
+            authorList.add(
+                    new Author(
+                            ++authorIdSequence,
+                            line,
+                            LocalDateTime.now(),
+                            LocalDateTime.now()
+                    ));
         }
-
         return authorList;
     }
 

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -14,6 +15,8 @@ import java.util.Objects;
 public class Author implements BaseEntity<Long> {
     private Long id;
     private String name;
+    private LocalDateTime createDate;
+    private LocalDateTime lastUpdateDate;
 
     public Author(Long id) {
         this.id = id;
