@@ -12,6 +12,4 @@ import java.time.LocalDateTime;
 public class AuthorRequestDto {
     private Long id;
     private String name;
-    private LocalDateTime createDate;
-    private LocalDateTime lastUpdateDate;
 }
