@@ -1,11 +1,8 @@
 package com.mjc.school.service.mapper;
 
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.dto.AuthorRequestDto;
 import com.mjc.school.service.dto.AuthorResponseDto;
-import com.mjc.school.service.dto.NewsRequestDto;
-import com.mjc.school.service.dto.NewsResponseDto;
 import org.modelmapper.ModelMapper;
 
 public class AuthorMapper {
