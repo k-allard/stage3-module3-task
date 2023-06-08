@@ -1,7 +1,10 @@
 package com.mjc.school;
 
 import com.mjc.school.controller.BaseController;
+import com.mjc.school.controller.impl.AuthorController;
 import com.mjc.school.controller.impl.NewsController;
+import com.mjc.school.service.dto.AuthorRequestDto;
+import com.mjc.school.service.dto.AuthorResponseDto;
 import com.mjc.school.service.dto.NewsRequestDto;
 import com.mjc.school.service.dto.NewsResponseDto;
 import com.mjc.school.service.exceptions.ValidatorException;
@@ -11,7 +14,10 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_INT_VAL
 
 public class CommandsExecutor {
 
+    // TODO organize communication between module-web and module-main
+    //  by custom annotations @CommandHandler, @CommandBody and @CommandParam placed in controllers
     private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController = new NewsController();
+    private final BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController = new AuthorController();
 
     private final TerminalCommandsReader commandsReader = new TerminalCommandsReader();
 
@@ -23,16 +29,16 @@ public class CommandsExecutor {
         System.out.print("Operation: ");
         System.out.println(command.description);
         switch (command) {
-            case GET_ALL -> {
+            case GET_ALL_NEWS -> {
                 for (NewsResponseDto news : newsController.readAll()) {
                     System.out.println(news);
                 }
             }
-            case GET_BY_ID -> System.out.println(
+            case GET_NEWS_BY_ID -> System.out.println(
                     newsController.readById(
                             requestNewsId()
                     ));
-            case CREATE -> System.out.println(
+            case CREATE_NEWS -> System.out.println(
                     newsController.create(
                             new NewsRequestDto(
                                     null,
@@ -40,7 +46,7 @@ public class CommandsExecutor {
                                     requestNewsContent(),
                                     requestAuthorId()
                             )));
-            case UPDATE -> System.out.println(
+            case UPDATE_NEWS -> System.out.println(
                     newsController.update(
                             new NewsRequestDto(
                                     requestNewsId(),
@@ -48,10 +54,36 @@ public class CommandsExecutor {
                                     requestNewsContent(),
                                     requestAuthorId()
                             )));
-            case REMOVE_BY_ID -> System.out.println(
+            case REMOVE_NEWS_BY_ID -> System.out.println(
                     newsController.deleteById(
                             requestNewsId()
                     ));
+            case GET_ALL_AUTHORS -> {
+                for (AuthorResponseDto author : authorController.readAll()) {
+                    System.out.println(author);
+                }
+            }
+            case GET_AUTHOR_BY_ID -> System.out.println(
+                    authorController.readById(
+                            requestAuthorId()
+                    )
+            );
+            case CREATE_AUTHOR -> System.out.println(
+                    authorController.create(new AuthorRequestDto(
+                            null,
+                            requestAuthorName()
+                    ))
+            );
+            case UPDATE_AUTHOR -> System.out.println(
+                    authorController.update(new AuthorRequestDto(
+                            requestAuthorId(),
+                            requestAuthorName()
+                    ))
+            );
+            case REMOVE_AUTHOR_BY_ID -> System.out.println(
+                    authorController.deleteById(
+                            requestAuthorId())
+            );
         }
     }
 
@@ -80,4 +112,9 @@ public class CommandsExecutor {
     private String requestNewsTitle() {
         return commandsReader.requestResponseByPrompt("Enter news title:");
     }
+
+    private String requestAuthorName() {
+        return commandsReader.requestResponseByPrompt("Enter author name:");
+    }
+
 }

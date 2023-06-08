@@ -18,6 +18,8 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.NEWS_ID_DOES_NOT
 
 public class NewsService implements BaseService<NewsRequestDto, NewsResponseDto, Long> {
 
+    //TODO think of declarative validation outside of business logic, e.g. via custom annotations.
+    //  use Aspects.
     private final NewsDTORequestValidator newsValidator = new NewsDTORequestValidator();
 
     private final BaseRepository<NewsModel, Long> newsRepository = new NewsRepositoryImpl();

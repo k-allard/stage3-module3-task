@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +17,16 @@ public class AuthorResponseDto {
     private String name;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
+
+    @Override
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+        return "AuthorResponseDto[" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", createDate=" + formatter.format(createDate) +
+                ", lastUpdateDate=" + formatter.format(lastUpdateDate) +
+                ']';
+    }
 }

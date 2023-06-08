@@ -18,6 +18,8 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.AUTHOR_ID_DOES_N
 
 public class AuthorService implements BaseService<AuthorRequestDto, AuthorResponseDto, Long> {
 
+    //TODO think of declarative validation outside of business logic, e.g. via custom annotations.
+    //  use Aspects.
     private final AuthorDtoValidator authorValidator = new AuthorDtoValidator();
 
     private final BaseRepository<Author, Long> authorRepository = new AuthorRepositoryImpl();
@@ -73,8 +75,8 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
                 ));
     }
 
-    //TODO When deleting author provide 2 options: set authorId field for her/his news to null OR remove her/his news
-    //use custom annotation (e.g. @OnDelete) with its handler (could be implemented via Aspects).
+    //TODO remove her/his news
+    //  use custom annotation (e.g. @OnDelete) with its handler (could be implemented via Aspects).
     @Override
     public boolean deleteById(Long id) {
         authorValidator.validateAuthorId(id);

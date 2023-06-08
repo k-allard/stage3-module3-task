@@ -12,7 +12,12 @@ public class MainApplication {
         while (true) {
             commandsReader.getCommand().ifPresentOrElse(cmd ->
                     {
-                        commandsExecutor.executeCommand(cmd);
+                        try {
+                            //TODO Use Command pattern to call operations
+                            commandsExecutor.executeCommand(cmd);
+                        } catch (RuntimeException e) {
+                            System.out.println(e.getMessage());
+                        }
                     },
                     () -> System.out.println(COMMAND_NOT_FOUND_MESSAGE));
         }
