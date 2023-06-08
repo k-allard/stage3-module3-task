@@ -47,8 +47,9 @@ class NewsServiceTest {
     @Test
     @DisplayName("getNewsById() with invalid id fails")
     void getNewsByInvalidId() {
-        assertThrows(NotFoundException.class, () ->
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
                 newsService.readById(INVALID_NEWS_ID));
+        assertTrue(thrown.getMessage().contains("News with id %d does not exist".formatted(INVALID_NEWS_ID)));
     }
 
 
@@ -81,22 +82,25 @@ class NewsServiceTest {
     @Test
     @DisplayName("createNews() with invalid title fails")
     void createNewsWithInvalidTitle() {
-        assertThrows(ValidatorException.class, () -> newsService.create(
+        ValidatorException thrown = assertThrows(ValidatorException.class, () -> newsService.create(
                 new NewsRequestDto(null, INVALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)));
+        assertTrue(thrown.getMessage().contains("News title can not be"));
     }
 
     @Test
     @DisplayName("createNews() with invalid content fails")
     void createNewsWithInvalidContent() {
-        assertThrows(ValidatorException.class, () -> newsService.create(
+        ValidatorException thrown = assertThrows(ValidatorException.class, () -> newsService.create(
                 new NewsRequestDto(null, VALID_NEWS_TITLE, INVALID_NEWS_CONTENT, VALID_AUTHOR_ID)));
+        assertTrue(thrown.getMessage().contains("News content can not be"));
     }
 
     @Test
     @DisplayName("createNews() with invalid authorId fails")
     void createNewsWithInvalidAuthorId() {
-        assertThrows(NotFoundException.class, () -> newsService.create(
+        NotFoundException thrown = assertThrows(NotFoundException.class, () -> newsService.create(
                 new NewsRequestDto(null, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, INVALID_AUTHOR_ID)));
+        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
     }
 
     @Test
@@ -127,29 +131,45 @@ class NewsServiceTest {
     @Test
     @DisplayName("updateNews() with invalid id fails")
     void updateNewsWithInvalidId() {
-        assertThrows(NotFoundException.class, () -> newsService.update(
-                new NewsRequestDto(INVALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)));
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
+                newsService.update(
+                        new NewsRequestDto(
+                                INVALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
+                ));
+        assertTrue(thrown.getMessage().contains("News with id %d does not exist".formatted(INVALID_NEWS_ID)));
     }
 
     @Test
     @DisplayName("updateNews() with invalid title fails")
     void updateNewsWithInvalidTitle() {
-        assertThrows(ValidatorException.class, () -> newsService.update(
-                new NewsRequestDto(VALID_NEWS_ID, INVALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)));
+        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
+                newsService.update(
+                        new NewsRequestDto(
+                                VALID_NEWS_ID, INVALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
+                ));
+        assertTrue(thrown.getMessage().contains("News title can not be"));
     }
 
     @Test
     @DisplayName("updateNews() with invalid content fails")
     void updateNewsWithInvalidContent() {
-        assertThrows(ValidatorException.class, () -> newsService.update(
-                new NewsRequestDto(VALID_NEWS_ID, VALID_NEWS_TITLE, INVALID_NEWS_CONTENT, VALID_AUTHOR_ID)));
+        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
+                newsService.update(
+                        new NewsRequestDto(
+                                VALID_NEWS_ID, VALID_NEWS_TITLE, INVALID_NEWS_CONTENT, VALID_AUTHOR_ID)
+                ));
+        assertTrue(thrown.getMessage().contains("News content can not be"));
     }
 
     @Test
     @DisplayName("updateNews() with invalid authorId fails")
     void updateNewsWithInvalidAuthorId() {
-        assertThrows(NotFoundException.class, () -> newsService.update(
-                new NewsRequestDto(VALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, INVALID_AUTHOR_ID)));
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
+                newsService.update(
+                        new NewsRequestDto(
+                                VALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, INVALID_AUTHOR_ID)
+                ));
+        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
     }
 
     @Test
@@ -157,12 +177,15 @@ class NewsServiceTest {
     void removeNewsWithValidId() {
         newsService.readById(VALID_NEWS_ID);
         assertTrue(newsService.deleteById(VALID_NEWS_ID));
-        assertThrows(NotFoundException.class, () -> newsService.readById(VALID_NEWS_ID));
+        assertThrows(NotFoundException.class, () ->
+                newsService.readById(VALID_NEWS_ID));
     }
 
     @Test
     @DisplayName("removeNews() with invalid news id fails")
     void removeNewsWithInvalidId() {
-        assertThrows(NotFoundException.class, () -> newsService.deleteById(INVALID_NEWS_ID));
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
+                newsService.deleteById(INVALID_NEWS_ID));
+        assertTrue(thrown.getMessage().contains("News with id %d does not exist".formatted(INVALID_NEWS_ID)));
     }
 }

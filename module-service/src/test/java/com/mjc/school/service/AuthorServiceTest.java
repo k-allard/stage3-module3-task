@@ -41,8 +41,9 @@ class AuthorServiceTest {
     @Test
     @DisplayName("getAuthorById() with invalid id fails")
     void getAuthorByInvalidId() {
-        assertThrows(NotFoundException.class, () ->
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
                 authorService.readById(INVALID_AUTHOR_ID));
+        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
     }
 
 
@@ -70,9 +71,10 @@ class AuthorServiceTest {
 
     @Test
     @DisplayName("create() with invalid name fails")
-    void createAuthorWithInvalidTitle() {
-        assertThrows(ValidatorException.class, () -> authorService.create(
+    void createAuthorWithInvalidName() {
+        ValidatorException thrown = assertThrows(ValidatorException.class, () -> authorService.create(
                 new AuthorRequestDto(null, INVALID_AUTHOR_NAME)));
+        assertTrue(thrown.getMessage().contains("Author name can not be"));
     }
 
 
@@ -100,15 +102,19 @@ class AuthorServiceTest {
     @Test
     @DisplayName("updateAuthor() with invalid id fails")
     void updateAuthorWithInvalidId() {
-        assertThrows(NotFoundException.class, () -> authorService.update(
-                new AuthorRequestDto(INVALID_AUTHOR_ID, VALID_AUTHOR_NAME)));
+        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
+                authorService.update(
+                        new AuthorRequestDto(INVALID_AUTHOR_ID, VALID_AUTHOR_NAME)));
+        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
     }
 
     @Test
     @DisplayName("updateAuthor() with invalid name fails")
     void updateAuthorWithInvalidTitle() {
-        assertThrows(ValidatorException.class, () -> authorService.update(
-                new AuthorRequestDto(VALID_AUTHOR_ID, INVALID_AUTHOR_NAME)));
+        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
+                authorService.update(
+                        new AuthorRequestDto(VALID_AUTHOR_ID, INVALID_AUTHOR_NAME)));
+        assertTrue(thrown.getMessage().contains("Author name can not be"));
     }
 
     @Test
@@ -116,12 +122,14 @@ class AuthorServiceTest {
     void removeAuthorWithValidId() {
         authorService.readById(VALID_AUTHOR_ID);
         assertTrue(authorService.deleteById(VALID_AUTHOR_ID));
-        assertThrows(NotFoundException.class, () -> authorService.readById(VALID_AUTHOR_ID));
+        assertThrows(NotFoundException.class, () ->
+                authorService.readById(VALID_AUTHOR_ID));
     }
 
     @Test
     @DisplayName("removeAuthor() with invalid author id fails")
     void removeAuthorWithInvalidId() {
-        assertThrows(NotFoundException.class, () -> authorService.deleteById(INVALID_AUTHOR_ID));
+        NotFoundException thrown = assertThrows(NotFoundException.class, () -> authorService.deleteById(INVALID_AUTHOR_ID));
+        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
     }
 }
