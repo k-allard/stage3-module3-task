@@ -6,12 +6,15 @@ import com.mjc.school.repository.model.Author;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.dto.AuthorRequestDto;
 import com.mjc.school.service.dto.AuthorResponseDto;
+import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.mapper.AuthorMapper;
 import com.mjc.school.service.validator.AuthorDtoValidator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mjc.school.service.exceptions.ExceptionsCodes.AUTHOR_ID_DOES_NOT_EXIST;
 
 public class AuthorService implements BaseService<AuthorRequestDto, AuthorResponseDto, Long> {
 
@@ -32,6 +35,11 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
 
     @Override
     public AuthorResponseDto readById(Long id) {
+        authorValidator.validateAuthorId(id);
+        if (!authorRepository.existById(id)) {
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
+
+        }
         Author author = authorRepository.readById(id).get();
         return mapper.mapModelToResponseDto(author);
     }
@@ -52,7 +60,13 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
 
     @Override
     public AuthorResponseDto update(AuthorRequestDto authorUpdateRequest) {
+        Long id = authorUpdateRequest.getId();
+        authorValidator.validateAuthorId(id);
+        if (!authorRepository.existById(id)) {
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
+        }
         authorValidator.validateAuthorDTO(authorUpdateRequest);
+
         return mapper.mapModelToResponseDto(
                 authorRepository.update(
                         mapper.mapRequestDtoToModel(authorUpdateRequest)
@@ -61,6 +75,10 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
 
     @Override
     public boolean deleteById(Long id) {
+        authorValidator.validateAuthorId(id);
+        if (!authorRepository.existById(id)) {
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
+        }
         return authorRepository.deleteById(id);
     }
 }

@@ -1,5 +1,8 @@
 package com.mjc.school.service.validator;
 
+import com.mjc.school.repository.BaseRepository;
+import com.mjc.school.repository.impl.AuthorRepositoryImpl;
+import com.mjc.school.repository.model.Author;
 import com.mjc.school.service.dto.NewsRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
@@ -10,7 +13,7 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_STRING_
 
 public class NewsDTORequestValidator {
 
-    private static final int MAX_NUM_OF_AUTHORS = 30;
+    private final BaseRepository<Author, Long> authorRepository = new AuthorRepositoryImpl();
 
     public void validateNewsDTORequest(NewsRequestDto dto) {
         checkNewsTitle(dto.getTitle());
@@ -49,9 +52,8 @@ public class NewsDTORequestValidator {
             throw new ValidatorException(
                     String.format(VALIDATE_NEGATIVE_OR_NULL_NUMBER.getMessage(), "Author id", "Author id", id));
         }
-        //TODO change to actually validate author id in author_repo
-        if (id > MAX_NUM_OF_AUTHORS) {
-            throw new NotFoundException(AUTHOR_ID_DOES_NOT_EXIST.getMessage().formatted(id));
+        if (!authorRepository.existById(id)) {
+            throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
         }
     }
 }

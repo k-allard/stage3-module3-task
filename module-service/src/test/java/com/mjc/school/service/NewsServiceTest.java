@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -60,11 +61,14 @@ class NewsServiceTest {
         assertEquals(VALID_NEWS_TITLE, response.getTitle());
         assertEquals(VALID_NEWS_CONTENT, response.getContent());
         assertEquals(VALID_AUTHOR_ID, response.getAuthorId());
+        assertNotNull(response.getId());
+        assertNotNull(response.getCreateDate());
+        assertNotNull(response.getLastUpdateDate());
     }
 
     @Test
     @DisplayName("createNews() saves new news")
-    void createValidNewsAndCheckThatItWasWrittenToRepo()  {
+    void createValidNewsAndCheckThatItWasWrittenToRepo() {
         NewsResponseDto responseOfCreate = newsService.create(
                 new NewsRequestDto(null, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
         );

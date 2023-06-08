@@ -14,15 +14,10 @@ public class DataSource {
     @Getter
     private final List<Author> authorList;
 
-    private final AtomicInteger idSequence = new AtomicInteger(0);
-
     public DataSource() {
+        AtomicInteger idSequence = new AtomicInteger(0);
         DataInitializer dataInitializer = new DataInitializer(idSequence);
         authorList = dataInitializer.initializeAuthorList();
         newsModelList = dataInitializer.initializeNewsList(authorList);
-    }
-
-    public int getNextNewsId() {
-        return idSequence.incrementAndGet();
     }
 }
