@@ -6,12 +6,15 @@ import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.dto.NewsRequestDto;
 import com.mjc.school.service.dto.NewsResponseDto;
+import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.validator.NewsDTORequestValidator;
 import com.mjc.school.service.mapper.NewsMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mjc.school.service.exceptions.ExceptionsCodes.NEWS_ID_DOES_NOT_EXIST;
 
 public class NewsService implements BaseService<NewsRequestDto, NewsResponseDto, Long> {
 
@@ -32,6 +35,10 @@ public class NewsService implements BaseService<NewsRequestDto, NewsResponseDto,
 
     @Override
     public NewsResponseDto readById(Long id) {
+        newsValidator.validateNewsId(id);
+        if (!newsRepository.existById(id)) {
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
+        }
         NewsModel newsModel = newsRepository.readById(id).get();
         return mapper.mapModelToResponseDto(newsModel);
     }
@@ -40,6 +47,7 @@ public class NewsService implements BaseService<NewsRequestDto, NewsResponseDto,
     public NewsResponseDto create(NewsRequestDto news) {
 
         newsValidator.validateNewsDTORequest(news);
+        newsValidator.validateAuthorId(news.getAuthorId());
 
         NewsResponseDto newNews =
                 new NewsResponseDto(
@@ -56,6 +64,11 @@ public class NewsService implements BaseService<NewsRequestDto, NewsResponseDto,
 
     @Override
     public NewsResponseDto update(NewsRequestDto news) {
+        newsValidator.validateNewsId(news.getId());
+        newsValidator.validateAuthorId(news.getAuthorId());
+        if (!newsRepository.existById(news.getId())) {
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), news.getId()));
+        }
 
         newsValidator.validateNewsDTORequest(news);
 
@@ -67,6 +80,10 @@ public class NewsService implements BaseService<NewsRequestDto, NewsResponseDto,
 
     @Override
     public boolean deleteById(Long id) {
+        newsValidator.validateNewsId(id);
+        if (!newsRepository.existById(id)) {
+            throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), id));
+        }
         return newsRepository.deleteById(id);
     }
 }

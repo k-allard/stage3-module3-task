@@ -1,9 +1,17 @@
 package com.mjc.school.service.validator;
 
 import com.mjc.school.service.dto.NewsRequestDto;
+import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
 
+import static com.mjc.school.service.exceptions.ExceptionsCodes.AUTHOR_ID_DOES_NOT_EXIST;
+import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_NEGATIVE_OR_NULL_NUMBER;
+import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_STRING_LENGTH;
+
 public class NewsDTORequestValidator {
+
+    private static final int MAX_NUM_OF_AUTHORS = 30;
+
     public void validateNewsDTORequest(NewsRequestDto dto) {
         checkNewsTitle(dto.getTitle());
         checkNewsContent(dto.getContent());
@@ -12,17 +20,38 @@ public class NewsDTORequestValidator {
 
     private void checkNewsTitle(String title) {
         if (title == null || title.length() < 5 || title.length() > 30) {
-            throw new ValidatorException("News title can not be less than 5 and more than 30 symbols. " +
-                    "News title is " +
-                    title);
+            throw new ValidatorException(
+                    String.format(VALIDATE_STRING_LENGTH.getMessage(),
+                            "News title", 5, 30, "News title", title)
+            );
         }
     }
 
     private void checkNewsContent(String content) {
         if (content == null || content.length() < 5 || content.length() > 255) {
-            throw new ValidatorException("News content can not be less than 5 and more than 255 symbols. " +
-                    "News content is " +
-                    content);
+            throw new ValidatorException(
+                    String.format(VALIDATE_STRING_LENGTH.getMessage(),
+                            "News content", 5, 255, "News content", content)
+            );
+        }
+    }
+
+    public void validateNewsId(Long id) {
+        if (id == null || id < 1) {
+            throw new ValidatorException(
+                    String.format(VALIDATE_NEGATIVE_OR_NULL_NUMBER.getMessage(),
+                            "News id", "News id", id));
+        }
+    }
+
+    public void validateAuthorId(Long id) {
+        if (id == null || id < 1) {
+            throw new ValidatorException(
+                    String.format(VALIDATE_NEGATIVE_OR_NULL_NUMBER.getMessage(), "Author id", "Author id", id));
+        }
+        //TODO change to actually validate author id in author_repo
+        if (id > MAX_NUM_OF_AUTHORS) {
+            throw new NotFoundException(AUTHOR_ID_DOES_NOT_EXIST.getMessage().formatted(id));
         }
     }
 }

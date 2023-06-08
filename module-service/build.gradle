@@ -1,5 +1,4 @@
 dependencies {
     implementation project(':module-repository')
-    implementation 'org.projectlombok:lombok:1.18.22'
     implementation 'org.modelmapper:modelmapper:3.0.0'
 }
