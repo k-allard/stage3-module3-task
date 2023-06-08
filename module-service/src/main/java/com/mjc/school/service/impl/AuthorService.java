@@ -73,6 +73,8 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
                 ));
     }
 
+    //TODO When deleting author provide 2 options: set authorId field for her/his news to null OR remove her/his news
+    //use custom annotation (e.g. @OnDelete) with its handler (could be implemented via Aspects).
     @Override
     public boolean deleteById(Long id) {
         authorValidator.validateAuthorId(id);
