@@ -21,11 +21,7 @@ public class DataInitializer {
 
     private static final String FILENAME_NEWS_CONTENT = "/content";
 
-    private final AtomicInteger idSequence;
-
-    public DataInitializer(AtomicInteger idSequence) {
-        this.idSequence = idSequence;
-    }
+    private final AtomicInteger idSequence = new AtomicInteger(0);
 
     @SneakyThrows
     public List<Author> initializeAuthorList() {
