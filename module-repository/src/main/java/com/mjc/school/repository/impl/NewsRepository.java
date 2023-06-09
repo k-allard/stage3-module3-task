@@ -3,13 +3,15 @@ package com.mjc.school.repository.impl;
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.repository.utils.DataSource;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class NewsRepositoryImpl implements BaseRepository<NewsModel, Long> {
+@Repository
+public class NewsRepository implements BaseRepository<NewsModel, Long> {
 
     private final DataSource dataSource = new DataSource();
 

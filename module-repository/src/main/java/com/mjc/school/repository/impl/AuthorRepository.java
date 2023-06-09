@@ -3,12 +3,14 @@ package com.mjc.school.repository.impl;
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.utils.DataSource;
+import org.springframework.stereotype.Repository;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class AuthorRepositoryImpl implements BaseRepository<Author, Long> {
+@Repository
+public class AuthorRepository implements BaseRepository<Author, Long> {
 
     private final DataSource dataSource = new DataSource();
 

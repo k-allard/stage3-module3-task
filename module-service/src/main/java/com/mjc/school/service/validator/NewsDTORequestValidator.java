@@ -1,7 +1,7 @@
 package com.mjc.school.service.validator;
 
 import com.mjc.school.repository.BaseRepository;
-import com.mjc.school.repository.impl.AuthorRepositoryImpl;
+import com.mjc.school.repository.impl.AuthorRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.service.dto.NewsRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
@@ -13,7 +13,7 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_STRING_
 
 public class NewsDTORequestValidator {
 
-    private final BaseRepository<Author, Long> authorRepository = new AuthorRepositoryImpl();
+    private final BaseRepository<Author, Long> authorRepository = new AuthorRepository();
 
     public void validateNewsDTORequest(NewsRequestDto dto) {
         checkNewsTitle(dto.getTitle());

@@ -3,13 +3,22 @@ package com.mjc.school.controller.impl;
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.service.dto.NewsRequestDto;
 import com.mjc.school.service.dto.NewsResponseDto;
-import com.mjc.school.service.impl.NewsService;
 import com.mjc.school.service.BaseService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Controller
 public class NewsController implements BaseController<NewsRequestDto, NewsResponseDto, Long> {
-  private final BaseService<NewsRequestDto, NewsResponseDto, Long> newsService = new NewsService();
+  private final BaseService<NewsRequestDto, NewsResponseDto, Long> newsService;
+
+  public NewsController(
+          @Qualifier("newsService")
+          BaseService<NewsRequestDto, NewsResponseDto, Long> newsService
+  ) {
+    this.newsService = newsService;
+  }
 
   public List<NewsResponseDto> readAll() {
     return newsService.readAll();

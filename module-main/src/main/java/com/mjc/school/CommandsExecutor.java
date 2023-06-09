@@ -1,25 +1,33 @@
 package com.mjc.school;
 
 import com.mjc.school.controller.BaseController;
-import com.mjc.school.controller.impl.AuthorController;
-import com.mjc.school.controller.impl.NewsController;
 import com.mjc.school.service.dto.AuthorRequestDto;
 import com.mjc.school.service.dto.AuthorResponseDto;
 import com.mjc.school.service.dto.NewsRequestDto;
 import com.mjc.school.service.dto.NewsResponseDto;
 import com.mjc.school.service.exceptions.ValidatorException;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_INT_VALUE;
 
-
+@Component
 public class CommandsExecutor {
 
     // TODO organize communication between module-web and module-main
     //  by custom annotations @CommandHandler, @CommandBody and @CommandParam placed in controllers
-    private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController = new NewsController();
-    private final BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController = new AuthorController();
+    private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController;
+    private final BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController;
 
     private final TerminalCommandsReader commandsReader = new TerminalCommandsReader();
+
+    public CommandsExecutor(@Qualifier("newsController")
+                            BaseController<NewsRequestDto, NewsResponseDto, Long> newsController,
+                            @Qualifier("authorController")
+                            BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController) {
+        this.newsController = newsController;
+        this.authorController = authorController;
+    }
 
     public void executeCommand(Command command) {
 
