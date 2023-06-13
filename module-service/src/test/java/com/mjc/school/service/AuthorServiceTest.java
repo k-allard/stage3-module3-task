@@ -11,21 +11,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.ArgumentMatcher;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 
-//TODO write unit tests
 @ExtendWith(MockitoExtension.class)
 class AuthorServiceTest {
     private static final long INITIAL_NUMBER_OF_AUTHORS = 5;
@@ -34,17 +38,16 @@ class AuthorServiceTest {
     private static final String VALID_AUTHOR_NAME = "Valid Name";
     private static final String INVALID_AUTHOR_NAME = "Albus Percival Wulfric Brian Dumbledore";
 
-    private AuthorService authorService;
-
     @Mock
     private AuthorRepository authorRepository;
+
+    @InjectMocks
+    private AuthorService authorService;
 
     private final List<Author> authorList = new ArrayList<>();
 
     @BeforeEach
     void init() {
-        authorService = new AuthorService(authorRepository);
-
         authorList.add(new Author(1L, "Agatha Christie", LocalDateTime.now(), LocalDateTime.now()));
         authorList.add(new Author(2L, "Husna Ahmad", LocalDateTime.now(), LocalDateTime.now()));
         authorList.add(new Author(3L, "Svenja Adolphs", LocalDateTime.now(), LocalDateTime.now()));
@@ -90,7 +93,7 @@ class AuthorServiceTest {
     void createValidAuthorAndCheckResponse() {
         Mockito
                 .when(
-                        authorRepository.create(Mockito.any(Author.class)))
+                        authorRepository.create(any(Author.class)))
                 .thenReturn(
                         new Author(6L, VALID_AUTHOR_NAME, LocalDateTime.now(),
                                 LocalDateTime.now()));
@@ -120,7 +123,7 @@ class AuthorServiceTest {
         Mockito.when(authorRepository.existById(VALID_AUTHOR_ID))
                 .thenReturn(true);
         Mockito
-                .when(authorRepository.update(Mockito.any(Author.class)))
+                .when(authorRepository.update(argThat(new ValidAuthor())))
                 .thenReturn(new Author(
                         VALID_AUTHOR_ID, VALID_AUTHOR_NAME, LocalDateTime.now(),
                         LocalDateTime.now()));
@@ -156,10 +159,20 @@ class AuthorServiceTest {
     @Test
     @DisplayName("removeAuthor() with invalid author id fails")
     void removeAuthorWithInvalidId() {
-        Mockito.when(authorRepository.existById(INVALID_AUTHOR_ID))
-                .thenReturn(false);
         NotFoundException thrown = assertThrows(NotFoundException.class, () ->
                 authorService.deleteById(INVALID_AUTHOR_ID));
         assertTrue(thrown.getMessage().contains("Author Id does not exist"));
+    }
+
+    private static class ValidAuthor implements ArgumentMatcher<Author> {
+        @Override
+        public boolean matches(Author author) {
+            return author.getId() == VALID_AUTHOR_ID
+                    && Objects.equals(author.getName(), VALID_AUTHOR_NAME);
+        }
+
+        public String toString() {
+            return "[author with valid id and name]";
+        }
     }
 }
