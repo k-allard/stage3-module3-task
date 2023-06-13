@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 
 @ExtendWith(MockitoExtension.class)
 class NewsServiceTest {
@@ -143,10 +140,10 @@ class NewsServiceTest {
     @Test
     @DisplayName("updateNews() returns updated news")
     void updateValidNewsAndCheckResponse() {
-        Mockito.when(newsRepository.existById(VALID_AUTHOR_ID))
+        Mockito.when(newsRepository.existById(VALID_NEWS_ID))
                 .thenReturn(true);
         Mockito
-                .when(newsRepository.update(argThat(new ValidNews())))
+                .when(newsRepository.update(any(NewsModel.class)))
                 .thenReturn(new NewsModel(
                         VALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, LocalDateTime.now(),
                         LocalDateTime.now(), VALID_AUTHOR_ID));
@@ -218,7 +215,7 @@ class NewsServiceTest {
                 .thenReturn(true);
         Mockito.when(newsRepository.deleteById(VALID_NEWS_ID))
                 .thenReturn(true);
-        assertTrue(newsService.deleteById(VALID_AUTHOR_ID));
+        assertTrue(newsService.deleteById(VALID_NEWS_ID));
     }
 
     @Test
@@ -228,21 +225,4 @@ class NewsServiceTest {
                 newsService.deleteById(INVALID_NEWS_ID));
         assertTrue(thrown.getMessage().contains("News with id %d does not exist".formatted(INVALID_NEWS_ID)));
     }
-
-    private static class ValidNews implements ArgumentMatcher<NewsModel> {
-        @Override
-        public boolean matches(NewsModel news) {
-            return Objects.equals(news.getTitle(), VALID_NEWS_TITLE)
-                    && news.getId() == VALID_NEWS_ID
-                    && Objects.equals(news.getContent(), VALID_NEWS_CONTENT)
-                    && news.getAuthorId() == VALID_AUTHOR_ID
-                    && news.getCreateDate() != null
-                    && news.getLastUpdateDate() != null;
-        }
-
-        public String toString() {
-            return "[valid news]";
-        }
-    }
-
 }
