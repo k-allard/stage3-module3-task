@@ -19,7 +19,6 @@ import java.util.List;
 
 import static com.mjc.school.service.exceptions.ExceptionsCodes.NEWS_ID_DOES_NOT_EXIST;
 
-@Service
 public class NewsService implements BaseService<NewsRequestDto, NewsResponseDto, Long> {
 
     //TODO think of declarative validation outside of business logic, e.g. via custom annotations.

@@ -18,7 +18,6 @@ import java.util.List;
 
 import static com.mjc.school.service.exceptions.ExceptionsCodes.AUTHOR_ID_DOES_NOT_EXIST;
 
-@Service
 public class AuthorService implements BaseService<AuthorRequestDto, AuthorResponseDto, Long> {
 
     //TODO think of declarative validation outside of business logic, e.g. via custom annotations.
@@ -46,7 +45,6 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
         authorValidator.validateAuthorId(id);
         if (!authorRepository.existById(id)) {
             throw new NotFoundException(String.format(AUTHOR_ID_DOES_NOT_EXIST.getMessage(), id));
-
         }
         Author author = authorRepository.readById(id).get();
         return mapper.mapModelToResponseDto(author);

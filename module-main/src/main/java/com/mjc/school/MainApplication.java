@@ -11,6 +11,7 @@ public class MainApplication {
     private static final ApplicationContext context = new AnnotationConfigApplicationContext(MainApplication.class);
 
     public static void main(String[] args) {
+        printBeans(); //TODO remove
         TerminalCommandsReader commandsReader = new TerminalCommandsReader();
 
         CommandsExecutor commandsExecutor = context.getBean(CommandsExecutor.class);
@@ -28,5 +29,15 @@ public class MainApplication {
                     () -> System.out.println(COMMAND_NOT_FOUND_MESSAGE));
         }
 
+    }
+
+    private static void printBeans() {
+        try (AnnotationConfigApplicationContext context =
+                     new AnnotationConfigApplicationContext(MainApplication.class)) {
+            String[] singletonNames = context.getDefaultListableBeanFactory().getSingletonNames();
+            for (String singleton : singletonNames) {
+                System.out.println(singleton);
+            }
+        }
     }
 }

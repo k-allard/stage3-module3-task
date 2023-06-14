@@ -2,4 +2,5 @@ dependencies {
     implementation project(':module-repository')
     implementation 'org.modelmapper:modelmapper:3.0.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
+    implementation 'org.springframework.boot:spring-boot-starter-aop:3.1.0'
 }
