@@ -5,6 +5,7 @@ import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.impl.AuthorService;
 import com.mjc.school.service.impl.NewsService;
+import com.mjc.school.service.mapper.NewsMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,11 +31,16 @@ public class AppConfig {
 
     @Bean
     public NewsService newsService() {
-        return new NewsService(newsRepository);
+        return new NewsService(newsRepository, newsMapper());
     }
 
     @Bean
     public MyAspect myAspect() {
         return new MyAspect();
+    }
+
+    @Bean
+    public NewsMapper newsMapper() {
+        return new NewsMapper();
     }
 }

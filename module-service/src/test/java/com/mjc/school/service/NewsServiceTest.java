@@ -1,12 +1,16 @@
 package com.mjc.school.service;
 
+import com.mjc.school.repository.impl.AuthorRepository;
 import com.mjc.school.repository.impl.NewsRepository;
 import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.service.congiguration.AppConfig;
 import com.mjc.school.service.dto.NewsRequestDto;
 import com.mjc.school.service.dto.NewsResponseDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
+import com.mjc.school.service.impl.AuthorService;
 import com.mjc.school.service.impl.NewsService;
+import com.mjc.school.service.mapper.NewsMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +19,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,6 +51,9 @@ class NewsServiceTest {
 
     @Mock
     private NewsRepository newsRepository;
+
+    @Mock
+    private NewsMapper newsMapper;
 
     @InjectMocks
     private NewsService newsService;
