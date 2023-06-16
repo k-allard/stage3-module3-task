@@ -42,9 +42,7 @@ public class NewsRequestDtoValidator {
     }
 
     public void validateAuthorId(Long id) {
-        if (id == null)
-            return;
-        if (id < 1) {
+        if (id == null || id < 1) {
             throw new ValidatorException(
                     String.format(VALIDATE_NEGATIVE_OR_NULL_NUMBER.getMessage(), "Author id", "Author id", id));
         }

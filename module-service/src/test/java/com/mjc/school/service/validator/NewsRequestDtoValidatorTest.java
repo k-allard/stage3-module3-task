@@ -24,8 +24,10 @@ public class NewsRequestDtoValidatorTest {
     private static final long VALID_AUTHOR_ID = 2L;
     private static final String VALID_NEWS_TITLE = "VALID TITLE";
     private static final String VALID_NEWS_CONTENT = "Valid content.";
-    private static final long INVALID_NEWS_ID = 99L;
-    private static final long INVALID_AUTHOR_ID = 66L;
+    private static final long INVALID_NEWS_ID = -1L;
+    private static final Long INVALID_AUTHOR_ID = null;
+    private static final long NONEXISTENT_NEWS_ID = 99L;
+    private static final long NONEXISTENT_AUTHOR_ID = 66L;
     private static final String INVALID_NEWS_TITLE = "Ohhh";
     private static final String INVALID_NEWS_CONTENT = "Paradoxically, another property commonly attributed to news " +
             "is sensationalism, the disproportionate focus on, and exaggeration of, emotive stories for public " +
@@ -45,39 +47,55 @@ public class NewsRequestDtoValidatorTest {
 
     @Test
     @DisplayName("validateNewsId() with existent id - OK")
-    public void getNewsBy1ValidId() {
+    public void validateValidId() {
         assertDoesNotThrow(() ->
                 validator.validateNewsId(VALID_NEWS_ID));
     }
 
     @Test
     @DisplayName("validateNewsId() with non-existent id fails")
-    public void getNewsByInvalidId() {
+    public void validateNonexistentNewsId() {
         NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-                validator.validateNewsId(INVALID_NEWS_ID));
+                validator.validateNewsId(NONEXISTENT_NEWS_ID));
         assertTrue(thrown.getMessage().contains(
-                "News with id %d does not exist".formatted(INVALID_NEWS_ID)
+                "News with id %d does not exist".formatted(NONEXISTENT_NEWS_ID)
         ));
     }
 
     @Test
+    @DisplayName("validateNewsId() with invalid id fails")
+    public void validateInvalidNewsId() {
+        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
+                validator.validateNewsId(INVALID_NEWS_ID));
+        assertTrue(thrown.getMessage().contains("can not be null or less than 1"));
+    }
+
+    @Test
     @DisplayName("validateAuthorId() with existent id - OK")
-    public void createNewsWithValidAuthorId() {
+    public void validateValidAuthorId() {
         assertDoesNotThrow(() ->
                 validator.validateAuthorId(VALID_AUTHOR_ID));
     }
 
     @Test
     @DisplayName("validateAuthorId() with non-existent id fails")
-    public void createNewsWithInvalidAuthorId() {
+    public void validateNonexistentAuthorId() {
         NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-                validator.validateAuthorId(INVALID_AUTHOR_ID));
+                validator.validateAuthorId(NONEXISTENT_AUTHOR_ID));
         assertTrue(thrown.getMessage().contains("Author Id does not exist"));
     }
 
     @Test
+    @DisplayName("validateAuthorId() with invalid id fails")
+    public void validateInvalidAuthorId() {
+        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
+                validator.validateAuthorId(INVALID_AUTHOR_ID));
+        assertTrue(thrown.getMessage().contains("can not be null or less than 1"));
+    }
+
+    @Test
     @DisplayName("validateNewsDTORequest() with valid NewsRequestDto - OK")
-    public void createNewsWithValidDTO() {
+    public void validateValidDTO() {
         assertDoesNotThrow(() ->
                 validator.validateNewsDTORequest(
                         new NewsRequestDto(
@@ -87,7 +105,7 @@ public class NewsRequestDtoValidatorTest {
 
     @Test
     @DisplayName("validateNewsDTORequest() with invalid title fails")
-    public void createNewsWithInvalidTitle() {
+    public void validateInvalidTitle() {
         ValidatorException thrown = assertThrows(ValidatorException.class, () ->
                 validator.validateNewsDTORequest(
                         new NewsRequestDto(
@@ -98,7 +116,7 @@ public class NewsRequestDtoValidatorTest {
 
     @Test
     @DisplayName("validateNewsDTORequest() with invalid content fails")
-    public void createNewsWithInvalidContent() {
+    public void validateInvalidContent() {
         ValidatorException thrown = assertThrows(ValidatorException.class, () ->
                 validator.validateNewsDTORequest(
                         new NewsRequestDto(
