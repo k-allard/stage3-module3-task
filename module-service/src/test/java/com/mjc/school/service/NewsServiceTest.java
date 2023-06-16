@@ -27,15 +27,9 @@ import static org.mockito.ArgumentMatchers.any;
 class NewsServiceTest {
     private static final long INITIAL_NUMBER_OF_NEWS = 5;
     private static final long VALID_NEWS_ID = 3L;
-    private static final long INVALID_NEWS_ID = 99L;
     private static final long VALID_AUTHOR_ID = 2L;
-    private static final long INVALID_AUTHOR_ID = 66L;
     private static final String VALID_NEWS_TITLE = "VALID TITLE";
-    private static final String INVALID_NEWS_TITLE = "Ohhh";
     private static final String VALID_NEWS_CONTENT = "Valid content.";
-    private static final String INVALID_NEWS_CONTENT = "Paradoxically, another property commonly attributed to news " +
-            "is sensationalism, the disproportionate focus on, and exaggeration of, emotive stories for public " +
-            "consumption. This news is also not unrelated to gossip, the human practice of sharing information.";
 
     @Mock
     private NewsRepository newsRepository;
@@ -122,97 +116,4 @@ class NewsServiceTest {
                 .thenReturn(true);
         assertTrue(newsService.deleteById(VALID_NEWS_ID));
     }
-
-    //TODO move all test below to ValidationTest - they fail without ValidationAspect
-//    @Test
-//    @DisplayName("getNewsById() with invalid id fails")
-//    void getNewsByInvalidId() {
-//        Mockito.when(newsRepository.existById(INVALID_NEWS_ID))
-//                .thenReturn(false);
-//        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-//                newsService.readById(INVALID_NEWS_ID));
-//        assertTrue(thrown.getMessage().contains("News with id %d does not exist".formatted(INVALID_NEWS_ID)));
-//    }
-//
-//    @Test
-//    @DisplayName("createNews() with invalid title fails")
-//    void createNewsWithInvalidTitle() {
-//        ValidatorException thrown = assertThrows(ValidatorException.class, () -> newsService.create(
-//                new NewsRequestDto(null, INVALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)));
-//        assertTrue(thrown.getMessage().contains("News title can not be"));
-//    }
-//
-//    @Test
-//    @DisplayName("createNews() with invalid content fails")
-//    void createNewsWithInvalidContent() {
-//        ValidatorException thrown = assertThrows(ValidatorException.class, () -> newsService.create(
-//                new NewsRequestDto(null, VALID_NEWS_TITLE, INVALID_NEWS_CONTENT, VALID_AUTHOR_ID)));
-//        assertTrue(thrown.getMessage().contains("News content can not be"));
-//    }
-//
-//    @Test
-//    @DisplayName("createNews() with invalid authorId fails")
-//    void createNewsWithInvalidAuthorId() {
-//        NotFoundException thrown = assertThrows(NotFoundException.class, () -> newsService.create(
-//                new NewsRequestDto(null, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, INVALID_AUTHOR_ID)));
-//        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
-//    }
-//
-//    @Test
-//    @DisplayName("updateNews() with invalid id fails")
-//    void updateNewsWithInvalidId() {
-//        Mockito.when(newsRepository.existById(INVALID_NEWS_ID))
-//                .thenReturn(false);
-//        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-//                newsService.update(
-//                        new NewsRequestDto(
-//                                INVALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
-//                ));
-//        assertTrue(thrown.getMessage().contains("News with id %d does not exist".formatted(INVALID_NEWS_ID)));
-//    }
-//
-//    @Test
-//    @DisplayName("updateNews() with invalid title fails")
-//    void updateNewsWithInvalidTitle() {
-//        Mockito.when(newsRepository.existById(VALID_NEWS_ID))
-//                .thenReturn(true);
-//        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
-//                newsService.update(
-//                        new NewsRequestDto(
-//                                VALID_NEWS_ID, INVALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
-//                ));
-//        assertTrue(thrown.getMessage().contains("News title can not be"));
-//    }
-//
-//    @Test
-//    @DisplayName("updateNews() with invalid content fails")
-//    void updateNewsWithInvalidContent() {
-//        Mockito.when(newsRepository.existById(VALID_NEWS_ID))
-//                .thenReturn(true);
-//        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
-//                newsService.update(
-//                        new NewsRequestDto(
-//                                VALID_NEWS_ID, VALID_NEWS_TITLE, INVALID_NEWS_CONTENT, VALID_AUTHOR_ID)
-//                ));
-//        assertTrue(thrown.getMessage().contains("News content can not be"));
-//    }
-//
-//    @Test
-//    @DisplayName("updateNews() with invalid authorId fails")
-//    void updateNewsWithInvalidAuthorId() {
-//        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-//                newsService.update(
-//                        new NewsRequestDto(
-//                                VALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, INVALID_AUTHOR_ID)
-//                ));
-//        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
-//    }
-//
-//    @Test
-//    @DisplayName("removeNews() with invalid news id fails")
-//    void removeNewsWithInvalidId() {
-//        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-//                newsService.deleteById(INVALID_NEWS_ID));
-//        assertTrue(thrown.getMessage().contains("News with id %d does not exist".formatted(INVALID_NEWS_ID)));
-//    }
 }

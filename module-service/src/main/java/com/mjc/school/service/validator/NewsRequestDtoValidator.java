@@ -12,12 +12,12 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.NEWS_ID_DOES_NOT
 import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_NEGATIVE_OR_NULL_NUMBER;
 import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_STRING_LENGTH;
 
-public class NewsDTORequestValidator {
+public class NewsRequestDtoValidator {
 
     private final BaseRepository<Author, Long> authorRepository;
     private final BaseRepository<NewsModel, Long> newsRepository;
 
-    public NewsDTORequestValidator(BaseRepository<Author, Long> authorRepository,
+    public NewsRequestDtoValidator(BaseRepository<Author, Long> authorRepository,
                                    BaseRepository<NewsModel, Long> newsRepository) {
         this.authorRepository = authorRepository;
         this.newsRepository = newsRepository;

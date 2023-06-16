@@ -6,7 +6,7 @@ import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.impl.AuthorService;
 import com.mjc.school.service.impl.NewsService;
 import com.mjc.school.service.validator.AuthorRequestDtoValidator;
-import com.mjc.school.service.validator.NewsDTORequestValidator;
+import com.mjc.school.service.validator.NewsRequestDtoValidator;
 import com.mjc.school.service.validator.ValidationAspect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +47,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    public NewsDTORequestValidator newsDTORequestValidator() {
-        return new NewsDTORequestValidator(authorRepository, newsRepository);
+    public NewsRequestDtoValidator newsDTORequestValidator() {
+        return new NewsRequestDtoValidator(authorRepository, newsRepository);
     }
 }

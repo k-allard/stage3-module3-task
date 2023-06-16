@@ -11,11 +11,11 @@ import org.aspectj.lang.annotation.Before;
 @Slf4j
 public class ValidationAspect {
 
-    private final NewsDTORequestValidator newsValidator;
+    private final NewsRequestDtoValidator newsValidator;
 
     private final AuthorRequestDtoValidator authorValidator;
 
-    public ValidationAspect(NewsDTORequestValidator newsValidator,
+    public ValidationAspect(NewsRequestDtoValidator newsValidator,
                             AuthorRequestDtoValidator authorValidator) {
         this.newsValidator = newsValidator;
         this.authorValidator = authorValidator;
