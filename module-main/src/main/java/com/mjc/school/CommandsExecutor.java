@@ -14,8 +14,6 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_INT_VAL
 @Component
 public class CommandsExecutor {
 
-    // TODO organize communication between module-web and module-main
-    //  by custom annotations @CommandHandler, @CommandBody and @CommandParam placed in controllers
     private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController;
     private final BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController;
 

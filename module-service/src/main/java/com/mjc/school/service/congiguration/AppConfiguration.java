@@ -28,7 +28,7 @@ public class AppConfiguration {
 
     @Bean
     public AuthorService authorService() {
-        return new AuthorService(authorRepository);
+        return new AuthorService(authorRepository, newsRepository);
     }
 
     @Bean

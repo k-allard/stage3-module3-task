@@ -2,6 +2,7 @@ package com.mjc.school.service.impl;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
+import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.dto.AuthorRequestDto;
 import com.mjc.school.service.dto.AuthorResponseDto;
@@ -11,6 +12,7 @@ import com.mjc.school.service.validator.annotations.ValidateInput;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AuthorService implements BaseService<AuthorRequestDto, AuthorResponseDto, Long> {
 
@@ -18,8 +20,13 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
 
     private final BaseRepository<Author, Long> authorRepository;
 
-    public AuthorService(BaseRepository<Author, Long> authorRepository) {
+    private final BaseRepository<NewsModel, Long> newsRepository;
+
+
+    public AuthorService(BaseRepository<Author, Long> authorRepository,
+                         BaseRepository<NewsModel, Long> newsRepository) {
         this.authorRepository = authorRepository;
+        this.newsRepository = newsRepository;
     }
 
     @Override
@@ -64,6 +71,7 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
     @Override
     @ValidateInput
     public boolean deleteById(Long id) {
+        newsRepository.readAll().removeIf(news -> Objects.equals(news.getAuthorId(), id));
         return authorRepository.deleteById(id);
     }
 }
