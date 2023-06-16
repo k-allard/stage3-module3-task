@@ -119,40 +119,6 @@ class AuthorServiceTest {
         assertTrue(authorService.deleteById(VALID_AUTHOR_ID));
     }
 
-    //TODO move all test below to ValidationTest - they fail without ValidationAspect
-//    @Test
-//    @DisplayName("getAuthorById() with invalid id fails")
-//    void getAuthorByInvalidId() {
-//        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-//                authorService.readById(INVALID_AUTHOR_ID));
-//        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
-//    }
-//
-//    @Test
-//    @DisplayName("create() with invalid name fails")
-//    void createAuthorWithInvalidName() {
-//        ValidatorException thrown = assertThrows(ValidatorException.class, () -> authorService.create(
-//                new AuthorRequestDto(null, INVALID_AUTHOR_NAME)));
-//        assertTrue(thrown.getMessage().contains("Author name can not be"));
-//    }
-//
-//    @Test
-//    @DisplayName("updateAuthor() with invalid name fails")
-//    void updateAuthorWithInvalidTitle() {
-//        ValidatorException thrown = assertThrows(ValidatorException.class, () ->
-//                authorService.update(
-//                        new AuthorRequestDto(VALID_AUTHOR_ID, INVALID_AUTHOR_NAME)));
-//        assertTrue(thrown.getMessage().contains("Author name can not be"));
-//    }
-//
-//    @Test
-//    @DisplayName("removeAuthor() with invalid author id fails")
-//    void removeAuthorWithInvalidId() {
-//        NotFoundException thrown = assertThrows(NotFoundException.class, () ->
-//                authorService.deleteById(INVALID_AUTHOR_ID));
-//        assertTrue(thrown.getMessage().contains("Author Id does not exist"));
-//    }
-
     private static class ValidAuthor implements ArgumentMatcher<Author> {
         @Override
         public boolean matches(Author author) {
