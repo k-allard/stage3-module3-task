@@ -5,7 +5,9 @@ import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.impl.AuthorService;
 import com.mjc.school.service.impl.NewsService;
-import com.mjc.school.service.mapper.NewsMapper;
+import com.mjc.school.service.validator.AuthorRequestDtoValidator;
+import com.mjc.school.service.validator.NewsDTORequestValidator;
+import com.mjc.school.service.validator.ValidationAspect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +15,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
 @EnableAspectJAutoProxy
-public class AppConfig {
+public class AppConfiguration {
 
     BaseRepository<Author, Long> authorRepository;
     BaseRepository<NewsModel, Long> newsRepository;
 
-    public AppConfig(@Qualifier("authorRepository") BaseRepository<Author, Long> authorRepository,
-                     @Qualifier("newsRepository") BaseRepository<NewsModel, Long> newsRepository) {
+    public AppConfiguration(@Qualifier("authorRepository") BaseRepository<Author, Long> authorRepository,
+                            @Qualifier("newsRepository") BaseRepository<NewsModel, Long> newsRepository) {
         this.authorRepository = authorRepository;
         this.newsRepository = newsRepository;
     }
@@ -31,16 +33,21 @@ public class AppConfig {
 
     @Bean
     public NewsService newsService() {
-        return new NewsService(newsRepository, newsMapper());
+        return new NewsService(newsRepository);
     }
 
     @Bean
-    public MyAspect myAspect() {
-        return new MyAspect();
+    public ValidationAspect myAspect() {
+        return new ValidationAspect(newsDTORequestValidator(), authorRequestDtoValidator());
     }
 
     @Bean
-    public NewsMapper newsMapper() {
-        return new NewsMapper();
+    public AuthorRequestDtoValidator authorRequestDtoValidator() {
+        return new AuthorRequestDtoValidator(authorRepository);
+    }
+
+    @Bean
+    public NewsDTORequestValidator newsDTORequestValidator() {
+        return new NewsDTORequestValidator(authorRepository, newsRepository);
     }
 }

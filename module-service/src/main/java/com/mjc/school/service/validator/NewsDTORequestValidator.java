@@ -1,8 +1,6 @@
 package com.mjc.school.service.validator;
 
 import com.mjc.school.repository.BaseRepository;
-import com.mjc.school.repository.impl.AuthorRepository;
-import com.mjc.school.repository.impl.NewsRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.dto.NewsRequestDto;
@@ -16,8 +14,14 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_STRING_
 
 public class NewsDTORequestValidator {
 
-    private final BaseRepository<Author, Long> authorRepository = new AuthorRepository();
-    private final BaseRepository<NewsModel, Long> newsRepository = new NewsRepository();
+    private final BaseRepository<Author, Long> authorRepository;
+    private final BaseRepository<NewsModel, Long> newsRepository;
+
+    public NewsDTORequestValidator(BaseRepository<Author, Long> authorRepository,
+                                   BaseRepository<NewsModel, Long> newsRepository) {
+        this.authorRepository = authorRepository;
+        this.newsRepository = newsRepository;
+    }
 
 
     public void validateNewsDTORequest(NewsRequestDto dto) {
