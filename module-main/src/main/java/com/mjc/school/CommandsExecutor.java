@@ -1,11 +1,11 @@
 package com.mjc.school;
 
 import com.mjc.school.controller.BaseController;
-import com.mjc.school.exceptions.IdFormatException;
 import com.mjc.school.controller.dto.AuthorRequestDto;
 import com.mjc.school.controller.dto.AuthorResponseDto;
 import com.mjc.school.controller.dto.NewsRequestDto;
 import com.mjc.school.controller.dto.NewsResponseDto;
+import com.mjc.school.exceptions.IdFormatException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 

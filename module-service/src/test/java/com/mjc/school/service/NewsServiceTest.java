@@ -30,13 +30,10 @@ class NewsServiceTest {
     private static final long VALID_AUTHOR_ID = 2L;
     private static final String VALID_NEWS_TITLE = "VALID TITLE";
     private static final String VALID_NEWS_CONTENT = "Valid content.";
-
+    private final List<NewsModel> newsList = new ArrayList<>();
+    NewsService newsService;
     @Mock
     private NewsRepository newsRepository;
-
-    private final List<NewsModel> newsList = new ArrayList<>();
-
-    NewsService newsService;
 
     @BeforeEach
     void init() {

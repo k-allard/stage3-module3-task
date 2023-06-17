@@ -32,14 +32,11 @@ class AuthorServiceTest {
     private static final long INITIAL_NUMBER_OF_AUTHORS = 5;
     private static final long VALID_AUTHOR_ID = 3L;
     private static final String VALID_AUTHOR_NAME = "Valid Name";
-
+    private final List<Author> authorList = new ArrayList<>();
     @Mock
     private AuthorRepository authorRepository;
-
     @InjectMocks
     private AuthorService authorService;
-
-    private final List<Author> authorList = new ArrayList<>();
 
     @BeforeEach
     void init() {
