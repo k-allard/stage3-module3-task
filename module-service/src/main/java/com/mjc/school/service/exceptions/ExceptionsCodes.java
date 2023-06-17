@@ -6,8 +6,7 @@ public enum ExceptionsCodes {
     VALIDATE_NEGATIVE_OR_NULL_NUMBER(
             "03", "%s can not be null or less than 1. %s is: %s"),
     VALIDATE_STRING_LENGTH(
-            "04", "%s can not be less than %d and more than %d symbols. %s is %s"),
-    VALIDATE_INT_VALUE("05", "%s should be number");
+            "04", "%s can not be less than %d and more than %d symbols. %s is %s");
 
     private final String errorMessage;
 

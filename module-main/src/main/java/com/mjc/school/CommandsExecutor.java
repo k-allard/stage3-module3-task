@@ -1,15 +1,13 @@
 package com.mjc.school;
 
 import com.mjc.school.controller.BaseController;
-import com.mjc.school.service.dto.AuthorRequestDto;
-import com.mjc.school.service.dto.AuthorResponseDto;
-import com.mjc.school.service.dto.NewsRequestDto;
-import com.mjc.school.service.dto.NewsResponseDto;
-import com.mjc.school.service.exceptions.ValidatorException;
+import com.mjc.school.exceptions.IdFormatException;
+import com.mjc.school.controller.dto.AuthorRequestDto;
+import com.mjc.school.controller.dto.AuthorResponseDto;
+import com.mjc.school.controller.dto.NewsRequestDto;
+import com.mjc.school.controller.dto.NewsResponseDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_INT_VALUE;
 
 @Component
 public class CommandsExecutor {
@@ -97,8 +95,8 @@ public class CommandsExecutor {
         try {
             return Long.parseLong(commandsReader.requestResponseByPrompt("Enter news id:"));
         } catch (NumberFormatException e) {
-            throw new ValidatorException(
-                    String.format(VALIDATE_INT_VALUE.getMessage(), "News id"));
+            throw new IdFormatException(
+                    "ERROR_CODE: 05 ERROR_MESSAGE: News id should be number");
         }
     }
 
@@ -106,8 +104,8 @@ public class CommandsExecutor {
         try {
             return Long.parseLong(commandsReader.requestResponseByPrompt("Enter author id:"));
         } catch (NumberFormatException e) {
-            throw new ValidatorException(
-                    String.format(VALIDATE_INT_VALUE.getMessage(), "Author id"));
+            throw new IdFormatException(
+                    "ERROR_CODE: 05 ERROR_MESSAGE: Author id should be number");
         }
     }
 

@@ -1,7 +1,7 @@
 package com.mjc.school.service.validator;
 
 import com.mjc.school.repository.impl.AuthorRepository;
-import com.mjc.school.service.dto.AuthorRequestDto;
+import com.mjc.school.service.dto.ServiceAuthorRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorRequestDtoValidatorTest {
+public class ServiceAuthorRequestDtoValidatorTest {
 
     private static final long VALID_AUTHOR_ID = 2L;
     private static final Long INVALID_AUTHOR_ID = null;
@@ -46,7 +46,7 @@ public class AuthorRequestDtoValidatorTest {
     void validateValidDTO() {
         assertDoesNotThrow(() ->
                 validator.validateAuthorDTO(
-                        new AuthorRequestDto(VALID_AUTHOR_ID, VALID_AUTHOR_NAME)));
+                        new ServiceAuthorRequestDto(VALID_AUTHOR_ID, VALID_AUTHOR_NAME)));
     }
 
 
@@ -55,7 +55,7 @@ public class AuthorRequestDtoValidatorTest {
     void validateInvalidName() {
         ValidatorException thrown = assertThrows(ValidatorException.class, () ->
                 validator.validateAuthorDTO(
-                        new AuthorRequestDto(null, INVALID_AUTHOR_NAME)));
+                        new ServiceAuthorRequestDto(null, INVALID_AUTHOR_NAME)));
         assertTrue(thrown.getMessage().contains("Author name can not be"));
     }
 

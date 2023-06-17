@@ -1,7 +1,7 @@
 package com.mjc.school.service.validator;
 
-import com.mjc.school.service.dto.AuthorRequestDto;
-import com.mjc.school.service.dto.NewsRequestDto;
+import com.mjc.school.service.dto.ServiceAuthorRequestDto;
+import com.mjc.school.service.dto.ServiceNewsRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,7 +30,7 @@ public class ValidationAspect {
             log.error(
                     "@ValidateInput annotation should be placed on method with at least 1 parameter.\n" +
                             "No validation will be performed");
-        } else if (requestObject[0] instanceof NewsRequestDto news) {
+        } else if (requestObject[0] instanceof ServiceNewsRequestDto news) {
             log.debug("Started executing validateInput advice for NewsRequestDto parameter");
             newsValidator.validateNewsDTORequest(news);
             newsValidator.validateAuthorId(news.getAuthorId());
@@ -48,7 +48,7 @@ public class ValidationAspect {
                 log.error("@ValidateInput does not know how to validate IDs in "
                         + className + "yet\n" + "No validation will be performed");
             }
-        } else if (requestObject[0] instanceof AuthorRequestDto author) {
+        } else if (requestObject[0] instanceof ServiceAuthorRequestDto author) {
             log.debug("Started executing validateInput advice for AuthorRequestDto parameter");
             authorValidator.validateAuthorDTO(author);
             if (joinPoint.getSignature().getName().equals("update")) {

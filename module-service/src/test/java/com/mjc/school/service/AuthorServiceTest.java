@@ -2,8 +2,8 @@ package com.mjc.school.service;
 
 import com.mjc.school.repository.impl.AuthorRepository;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.service.dto.AuthorRequestDto;
-import com.mjc.school.service.dto.AuthorResponseDto;
+import com.mjc.school.service.dto.ServiceAuthorRequestDto;
+import com.mjc.school.service.dto.ServiceAuthorResponseDto;
 import com.mjc.school.service.impl.AuthorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,9 +31,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 class AuthorServiceTest {
     private static final long INITIAL_NUMBER_OF_AUTHORS = 5;
     private static final long VALID_AUTHOR_ID = 3L;
-    private static final long INVALID_AUTHOR_ID = 66L;
     private static final String VALID_AUTHOR_NAME = "Valid Name";
-    private static final String INVALID_AUTHOR_NAME = "Albus Percival Wulfric Brian Dumbledore";
 
     @Mock
     private AuthorRepository authorRepository;
@@ -57,7 +55,7 @@ class AuthorServiceTest {
     void readAll() {
         Mockito.when(authorRepository.readAll())
                 .thenReturn(authorList);
-        List<AuthorResponseDto> list = authorService.readAll();
+        List<ServiceAuthorResponseDto> list = authorService.readAll();
         assertEquals(INITIAL_NUMBER_OF_AUTHORS, list.size());
     }
 
@@ -68,7 +66,7 @@ class AuthorServiceTest {
                 .thenReturn(Optional.ofNullable(
                         authorList.get(authorList.indexOf(new Author(VALID_AUTHOR_ID))))
                 );
-        AuthorResponseDto author = authorService.readById(VALID_AUTHOR_ID);
+        ServiceAuthorResponseDto author = authorService.readById(VALID_AUTHOR_ID);
         assertEquals(VALID_AUTHOR_ID, author.getId());
     }
 
@@ -84,8 +82,8 @@ class AuthorServiceTest {
                                 LocalDateTime.now()));
 
 
-        AuthorResponseDto response = authorService.create(
-                new AuthorRequestDto(null, VALID_AUTHOR_NAME)
+        ServiceAuthorResponseDto response = authorService.create(
+                new ServiceAuthorRequestDto(null, VALID_AUTHOR_NAME)
         );
         assertEquals(VALID_AUTHOR_NAME, response.getName());
         assertNotNull(response.getId());
@@ -103,8 +101,8 @@ class AuthorServiceTest {
                         VALID_AUTHOR_ID, VALID_AUTHOR_NAME, LocalDateTime.now(),
                         LocalDateTime.now()));
 
-        AuthorResponseDto response = authorService.update(
-                new AuthorRequestDto(VALID_AUTHOR_ID, VALID_AUTHOR_NAME)
+        ServiceAuthorResponseDto response = authorService.update(
+                new ServiceAuthorRequestDto(VALID_AUTHOR_ID, VALID_AUTHOR_NAME)
         );
         assertEquals(VALID_AUTHOR_ID, response.getId());
         assertEquals(VALID_AUTHOR_NAME, response.getName());

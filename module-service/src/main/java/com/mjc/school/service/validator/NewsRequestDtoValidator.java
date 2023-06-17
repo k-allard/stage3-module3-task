@@ -3,7 +3,7 @@ package com.mjc.school.service.validator;
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.NewsModel;
-import com.mjc.school.service.dto.NewsRequestDto;
+import com.mjc.school.service.dto.ServiceNewsRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
 
@@ -24,7 +24,7 @@ public class NewsRequestDtoValidator {
     }
 
 
-    public void validateNewsDTORequest(NewsRequestDto dto) {
+    public void validateNewsDTORequest(ServiceNewsRequestDto dto) {
         checkNewsTitle(dto.getTitle());
         checkNewsContent(dto.getContent());
     }

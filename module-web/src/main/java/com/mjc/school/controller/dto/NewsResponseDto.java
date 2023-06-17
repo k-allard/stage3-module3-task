@@ -1,4 +1,4 @@
-package com.mjc.school.service.dto;
+package com.mjc.school.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

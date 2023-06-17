@@ -2,7 +2,7 @@ package com.mjc.school.service.validator;
 
 import com.mjc.school.repository.impl.AuthorRepository;
 import com.mjc.school.repository.impl.NewsRepository;
-import com.mjc.school.service.dto.NewsRequestDto;
+import com.mjc.school.service.dto.ServiceNewsRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class NewsRequestDtoValidatorTest {
+public class ServiceNewsRequestDtoValidatorTest {
 
     private static final long VALID_NEWS_ID = 3L;
     private static final long VALID_AUTHOR_ID = 2L;
@@ -98,7 +98,7 @@ public class NewsRequestDtoValidatorTest {
     public void validateValidDTO() {
         assertDoesNotThrow(() ->
                 validator.validateNewsDTORequest(
-                        new NewsRequestDto(
+                        new ServiceNewsRequestDto(
                                 null, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
                 ));
     }
@@ -108,7 +108,7 @@ public class NewsRequestDtoValidatorTest {
     public void validateInvalidTitle() {
         ValidatorException thrown = assertThrows(ValidatorException.class, () ->
                 validator.validateNewsDTORequest(
-                        new NewsRequestDto(
+                        new ServiceNewsRequestDto(
                                 null, INVALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
                 ));
         assertTrue(thrown.getMessage().contains("News title can not be"));
@@ -119,7 +119,7 @@ public class NewsRequestDtoValidatorTest {
     public void validateInvalidContent() {
         ValidatorException thrown = assertThrows(ValidatorException.class, () ->
                 validator.validateNewsDTORequest(
-                        new NewsRequestDto(
+                        new ServiceNewsRequestDto(
                                 null, VALID_NEWS_TITLE, INVALID_NEWS_CONTENT, VALID_AUTHOR_ID)
                 ));
         assertTrue(thrown.getMessage().contains("News content can not be"));

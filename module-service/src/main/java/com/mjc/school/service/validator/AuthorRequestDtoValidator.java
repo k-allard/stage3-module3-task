@@ -2,7 +2,7 @@ package com.mjc.school.service.validator;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.service.dto.AuthorRequestDto;
+import com.mjc.school.service.dto.ServiceAuthorRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
 
@@ -18,7 +18,7 @@ public class AuthorRequestDtoValidator {
         authorRepository = repository;
     }
 
-    public void validateAuthorDTO(AuthorRequestDto dto) {
+    public void validateAuthorDTO(ServiceAuthorRequestDto dto) {
         checkName(dto.getName());
     }
 

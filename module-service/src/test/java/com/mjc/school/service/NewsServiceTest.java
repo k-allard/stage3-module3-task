@@ -2,8 +2,8 @@ package com.mjc.school.service;
 
 import com.mjc.school.repository.impl.NewsRepository;
 import com.mjc.school.repository.model.NewsModel;
-import com.mjc.school.service.dto.NewsRequestDto;
-import com.mjc.school.service.dto.NewsResponseDto;
+import com.mjc.school.service.dto.ServiceNewsRequestDto;
+import com.mjc.school.service.dto.ServiceNewsResponseDto;
 import com.mjc.school.service.impl.NewsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +54,7 @@ class NewsServiceTest {
     void getAllNews() {
         Mockito.when(newsRepository.readAll())
                 .thenReturn(newsList);
-        List<NewsResponseDto> list = newsService.readAll();
+        List<ServiceNewsResponseDto> list = newsService.readAll();
         assertEquals(INITIAL_NUMBER_OF_NEWS, list.size());
     }
 
@@ -65,7 +65,7 @@ class NewsServiceTest {
                 .thenReturn(Optional.ofNullable(
                         newsList.get(newsList.indexOf(new NewsModel(VALID_NEWS_ID))))
                 );
-        NewsResponseDto news = newsService.readById(VALID_NEWS_ID);
+        ServiceNewsResponseDto news = newsService.readById(VALID_NEWS_ID);
         assertEquals(VALID_NEWS_ID, news.getId());
     }
 
@@ -80,8 +80,8 @@ class NewsServiceTest {
                                 LocalDateTime.now(), VALID_AUTHOR_ID));
 
 
-        NewsResponseDto response = newsService.create(
-                new NewsRequestDto(null, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
+        ServiceNewsResponseDto response = newsService.create(
+                new ServiceNewsRequestDto(null, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
         );
         assertEquals(VALID_NEWS_TITLE, response.getTitle());
         assertEquals(VALID_NEWS_CONTENT, response.getContent());
@@ -100,8 +100,8 @@ class NewsServiceTest {
                         VALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, LocalDateTime.now(),
                         LocalDateTime.now(), VALID_AUTHOR_ID));
 
-        NewsResponseDto response = newsService.update(
-                new NewsRequestDto(VALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
+        ServiceNewsResponseDto response = newsService.update(
+                new ServiceNewsRequestDto(VALID_NEWS_ID, VALID_NEWS_TITLE, VALID_NEWS_CONTENT, VALID_AUTHOR_ID)
         );
         assertEquals(VALID_NEWS_ID, response.getId());
         assertEquals(VALID_NEWS_TITLE, response.getTitle());

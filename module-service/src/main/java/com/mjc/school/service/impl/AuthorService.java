@@ -4,8 +4,8 @@ import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.BaseService;
-import com.mjc.school.service.dto.AuthorRequestDto;
-import com.mjc.school.service.dto.AuthorResponseDto;
+import com.mjc.school.service.dto.ServiceAuthorRequestDto;
+import com.mjc.school.service.dto.ServiceAuthorResponseDto;
 import com.mjc.school.service.mapper.AuthorMapper;
 import com.mjc.school.service.validator.annotations.ValidateInput;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AuthorService implements BaseService<AuthorRequestDto, AuthorResponseDto, Long> {
+public class AuthorService implements BaseService<ServiceAuthorRequestDto, ServiceAuthorResponseDto, Long> {
 
     private final AuthorMapper mapper = new AuthorMapper();
 
@@ -30,28 +30,28 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
     }
 
     @Override
-    public List<AuthorResponseDto> readAll() {
-        List<AuthorResponseDto> authorResponseDtoList = new ArrayList<>();
+    public List<ServiceAuthorResponseDto> readAll() {
+        List<ServiceAuthorResponseDto> serviceAuthorResponseDtoList = new ArrayList<>();
         for (Author author : authorRepository.readAll()) {
-            authorResponseDtoList.add(mapper.mapModelToResponseDto(author));
+            serviceAuthorResponseDtoList.add(mapper.mapModelToResponseDto(author));
         }
-        return authorResponseDtoList;
+        return serviceAuthorResponseDtoList;
     }
 
     @Override
     @ValidateInput
-    public AuthorResponseDto readById(Long id) {
+    public ServiceAuthorResponseDto readById(Long id) {
         Author author = authorRepository.readById(id).get();
         return mapper.mapModelToResponseDto(author);
     }
 
     @Override
     @ValidateInput
-    public AuthorResponseDto create(AuthorRequestDto authorRequestDto) {
-        AuthorResponseDto newAuthor =
-                new AuthorResponseDto(
+    public ServiceAuthorResponseDto create(ServiceAuthorRequestDto serviceAuthorRequestDto) {
+        ServiceAuthorResponseDto newAuthor =
+                new ServiceAuthorResponseDto(
                         null,
-                        authorRequestDto.getName(),
+                        serviceAuthorRequestDto.getName(),
                         LocalDateTime.now(),
                         LocalDateTime.now());
         return mapper.mapModelToResponseDto(authorRepository.create(
@@ -61,7 +61,7 @@ public class AuthorService implements BaseService<AuthorRequestDto, AuthorRespon
 
     @Override
     @ValidateInput
-    public AuthorResponseDto update(AuthorRequestDto authorUpdateRequest) {
+    public ServiceAuthorResponseDto update(ServiceAuthorRequestDto authorUpdateRequest) {
         return mapper.mapModelToResponseDto(
                 authorRepository.update(
                         mapper.mapRequestDtoToModel(authorUpdateRequest)
