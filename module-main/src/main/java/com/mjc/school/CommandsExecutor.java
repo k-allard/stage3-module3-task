@@ -37,14 +37,17 @@ public class CommandsExecutor {
         this.authorController = authorController;
     }
 
-    public void executeCommand(CommandType commandType) {
-
+    public void executeCommand(CommandType commandType) throws Throwable {
         if (commandType == CommandType.EXIT)
             System.exit(0);
-
         System.out.print("Operation: ");
         System.out.println(commandType.description);
-        Command command = switch (commandType) {
+        Command command = getCommandClassImpl(commandType);
+        command.execute();
+    }
+
+    private Command getCommandClassImpl(CommandType commandType) {
+        return switch (commandType) {
             case GET_ALL_NEWS -> new ReadAllNewsCommand(newsController);
             case GET_NEWS_BY_ID -> new ReadNewsByIdCommand(newsController, requestNewsId());
             case CREATE_NEWS -> new CreateNewsCommand(newsController,
@@ -73,7 +76,6 @@ public class CommandsExecutor {
             case REMOVE_AUTHOR_BY_ID -> new DeleteAuthorCommand(authorController, requestAuthorId());
             default -> throw new IllegalStateException("Unexpected commandType: " + commandType);
         };
-        command.execute();
     }
 
     private long requestNewsId() {

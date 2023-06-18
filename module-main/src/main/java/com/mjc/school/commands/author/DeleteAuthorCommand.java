@@ -1,12 +1,15 @@
 package com.mjc.school.commands.author;
 
 import com.mjc.school.commands.Command;
+import com.mjc.school.commands.CommandType;
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.controller.dto.AuthorRequestDto;
 import com.mjc.school.controller.dto.AuthorResponseDto;
 
-public class DeleteAuthorCommand implements Command {
+import java.lang.reflect.InvocationTargetException;
 
+public class DeleteAuthorCommand implements Command {
+    private final CommandType commandType = CommandType.REMOVE_AUTHOR_BY_ID;
     private final BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController;
     private final Long id;
 
@@ -18,8 +21,14 @@ public class DeleteAuthorCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        System.out.println(
-                authorController.deleteById(id));
+    public void execute() throws Throwable {
+        try {
+            System.out.println(getAuthorMethod(authorController, commandType)
+                    .invoke(authorController, id));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
 }

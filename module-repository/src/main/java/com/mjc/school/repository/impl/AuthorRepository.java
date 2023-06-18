@@ -5,6 +5,7 @@ import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.utils.DataSource;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
     public Author update(Author author) {
         Author authorFromRepo = readById(author.getId()).get();
         authorFromRepo.setName(author.getName());
+        authorFromRepo.setLastUpdateDate(LocalDateTime.now());
         return authorFromRepo;
     }
 

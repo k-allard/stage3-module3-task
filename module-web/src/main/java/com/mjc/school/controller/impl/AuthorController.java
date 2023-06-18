@@ -1,7 +1,7 @@
 package com.mjc.school.controller.impl;
 
 import com.mjc.school.controller.BaseController;
-import com.mjc.school.controller.commands.CommandHandler;
+import com.mjc.school.controller.CommandHandler;
 import com.mjc.school.controller.dto.AuthorRequestDto;
 import com.mjc.school.controller.dto.AuthorResponseDto;
 import com.mjc.school.controller.mapper.ServiceToWebDTOMapper;
@@ -26,7 +26,7 @@ public class AuthorController implements BaseController<AuthorRequestDto, Author
         this.authorService = authorService;
     }
 
-    @CommandHandler(operation = 6)
+    @CommandHandler(code = 6)
     public List<AuthorResponseDto> readAll() {
         List<AuthorResponseDto> authorResponseDtoList = new ArrayList<>();
         for (ServiceAuthorResponseDto responseDto : authorService.readAll()) {
@@ -35,24 +35,24 @@ public class AuthorController implements BaseController<AuthorRequestDto, Author
         return authorResponseDtoList;
     }
 
-    @CommandHandler(operation = 7)
+    @CommandHandler(code = 7)
     public AuthorResponseDto readById(Long newsId) {
         return mapper.mapServiceAuthorResponseDto(authorService.readById(newsId));
     }
 
-    @CommandHandler(operation = 8)
+    @CommandHandler(code = 8)
     public AuthorResponseDto create(AuthorRequestDto dtoRequest) {
         return mapper.mapServiceAuthorResponseDto(
                 authorService.create(mapper.mapAuthorRequestDto(dtoRequest)));
     }
 
-    @CommandHandler(operation = 9)
+    @CommandHandler(code = 9)
     public AuthorResponseDto update(AuthorRequestDto dtoRequest) {
         return mapper.mapServiceAuthorResponseDto(
                 authorService.update(mapper.mapAuthorRequestDto(dtoRequest)));
     }
 
-    @CommandHandler(operation = 10)
+    @CommandHandler(code = 10)
     public boolean deleteById(Long newsId) {
         return authorService.deleteById(newsId);
     }

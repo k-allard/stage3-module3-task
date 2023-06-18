@@ -1,12 +1,15 @@
 package com.mjc.school.commands.news;
 
 import com.mjc.school.commands.Command;
+import com.mjc.school.commands.CommandType;
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.controller.dto.NewsRequestDto;
 import com.mjc.school.controller.dto.NewsResponseDto;
 
-public class ReadAllNewsCommand implements Command {
+import java.lang.reflect.InvocationTargetException;
 
+public class ReadAllNewsCommand implements Command {
+    private final CommandType commandType = CommandType.GET_ALL_NEWS;
     private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController;
 
     public ReadAllNewsCommand(
@@ -15,9 +18,14 @@ public class ReadAllNewsCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        for (NewsResponseDto news : newsController.readAll()) {
-            System.out.println(news);
+    public void execute() throws Throwable {
+        try {
+            System.out.println(getNewsMethod(newsController, commandType)
+                    .invoke(newsController));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
         }
     }
 }

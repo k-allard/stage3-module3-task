@@ -20,7 +20,7 @@ public class MainApplication {
                     {
                         try {
                             commandsExecutor.executeCommand(cmd);
-                        } catch (RuntimeException e) {
+                        } catch (Throwable e) {
                             System.out.println(e.getMessage());
                         }
                     },
