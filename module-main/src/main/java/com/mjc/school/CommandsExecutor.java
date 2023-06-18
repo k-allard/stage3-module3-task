@@ -1,5 +1,17 @@
 package com.mjc.school;
 
+import com.mjc.school.commands.Command;
+import com.mjc.school.commands.CommandType;
+import com.mjc.school.commands.author.CreateAuthorCommand;
+import com.mjc.school.commands.author.DeleteAuthorCommand;
+import com.mjc.school.commands.author.ReadAllAuthorsCommand;
+import com.mjc.school.commands.author.ReadAuthorByIdCommand;
+import com.mjc.school.commands.author.UpdateAuthorCommand;
+import com.mjc.school.commands.news.CreateNewsCommand;
+import com.mjc.school.commands.news.DeleteNewsCommand;
+import com.mjc.school.commands.news.ReadAllNewsCommand;
+import com.mjc.school.commands.news.ReadNewsByIdCommand;
+import com.mjc.school.commands.news.UpdateNewsCommand;
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.controller.dto.AuthorRequestDto;
 import com.mjc.school.controller.dto.AuthorResponseDto;
@@ -25,70 +37,43 @@ public class CommandsExecutor {
         this.authorController = authorController;
     }
 
-    public void executeCommand(Command command) {
+    public void executeCommand(CommandType commandType) {
 
-        if (command == Command.EXIT)
+        if (commandType == CommandType.EXIT)
             System.exit(0);
 
         System.out.print("Operation: ");
-        System.out.println(command.description);
-        switch (command) {
-            case GET_ALL_NEWS -> {
-                for (NewsResponseDto news : newsController.readAll()) {
-                    System.out.println(news);
-                }
-            }
-            case GET_NEWS_BY_ID -> System.out.println(
-                    newsController.readById(
-                            requestNewsId()
-                    ));
-            case CREATE_NEWS -> System.out.println(
-                    newsController.create(
-                            new NewsRequestDto(
-                                    null,
-                                    requestNewsTitle(),
-                                    requestNewsContent(),
-                                    requestAuthorId()
-                            )));
-            case UPDATE_NEWS -> System.out.println(
-                    newsController.update(
-                            new NewsRequestDto(
-                                    requestNewsId(),
-                                    requestNewsTitle(),
-                                    requestNewsContent(),
-                                    requestAuthorId()
-                            )));
-            case REMOVE_NEWS_BY_ID -> System.out.println(
-                    newsController.deleteById(
-                            requestNewsId()
-                    ));
-            case GET_ALL_AUTHORS -> {
-                for (AuthorResponseDto author : authorController.readAll()) {
-                    System.out.println(author);
-                }
-            }
-            case GET_AUTHOR_BY_ID -> System.out.println(
-                    authorController.readById(
-                            requestAuthorId()
-                    )
-            );
-            case CREATE_AUTHOR -> System.out.println(
-                    authorController.create(new AuthorRequestDto(
+        System.out.println(commandType.description);
+        Command command = switch (commandType) {
+            case GET_ALL_NEWS -> new ReadAllNewsCommand(newsController);
+            case GET_NEWS_BY_ID -> new ReadNewsByIdCommand(newsController, requestNewsId());
+            case CREATE_NEWS -> new CreateNewsCommand(newsController,
+                    new NewsRequestDto(
                             null,
-                            requestAuthorName()
-                    ))
-            );
-            case UPDATE_AUTHOR -> System.out.println(
-                    authorController.update(new AuthorRequestDto(
+                            requestNewsTitle(),
+                            requestNewsContent(),
+                            requestAuthorId()));
+            case UPDATE_NEWS -> new UpdateNewsCommand(newsController,
+                    new NewsRequestDto(
+                            requestNewsId(),
+                            requestNewsTitle(),
+                            requestNewsContent(),
+                            requestAuthorId()));
+            case REMOVE_NEWS_BY_ID -> new DeleteNewsCommand(newsController, requestNewsId());
+            case GET_ALL_AUTHORS -> new ReadAllAuthorsCommand(authorController);
+            case GET_AUTHOR_BY_ID -> new ReadAuthorByIdCommand(authorController, requestAuthorId());
+            case CREATE_AUTHOR -> new CreateAuthorCommand(authorController,
+                    new AuthorRequestDto(
+                            null,
+                            requestAuthorName()));
+            case UPDATE_AUTHOR -> new UpdateAuthorCommand(authorController,
+                    new AuthorRequestDto(
                             requestAuthorId(),
-                            requestAuthorName()
-                    ))
-            );
-            case REMOVE_AUTHOR_BY_ID -> System.out.println(
-                    authorController.deleteById(
-                            requestAuthorId())
-            );
-        }
+                            requestAuthorName()));
+            case REMOVE_AUTHOR_BY_ID -> new DeleteAuthorCommand(authorController, requestAuthorId());
+            default -> throw new IllegalStateException("Unexpected commandType: " + commandType);
+        };
+        command.execute();
     }
 
     private long requestNewsId() {

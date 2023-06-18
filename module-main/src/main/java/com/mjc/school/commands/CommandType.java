@@ -1,6 +1,6 @@
-package com.mjc.school;
+package com.mjc.school.commands;
 
-public enum Command {
+public enum CommandType {
     GET_ALL_NEWS(1, "Get all news."),
 
     GET_NEWS_BY_ID(2, "Get news by id."),
@@ -27,7 +27,7 @@ public enum Command {
 
     public final String description;
 
-    Command(int code, String description) {
+    CommandType(int code, String description) {
         this.code = code;
         this.description = description;
     }

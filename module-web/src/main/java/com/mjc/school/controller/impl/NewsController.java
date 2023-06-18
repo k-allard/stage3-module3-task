@@ -1,6 +1,7 @@
 package com.mjc.school.controller.impl;
 
 import com.mjc.school.controller.BaseController;
+import com.mjc.school.controller.commands.CommandHandler;
 import com.mjc.school.controller.dto.NewsRequestDto;
 import com.mjc.school.controller.dto.NewsResponseDto;
 import com.mjc.school.controller.mapper.ServiceToWebDTOMapper;
@@ -26,6 +27,7 @@ public class NewsController implements BaseController<NewsRequestDto, NewsRespon
         this.newsService = newsService;
     }
 
+    @CommandHandler(operation = 1)
     public List<NewsResponseDto> readAll() {
         List<NewsResponseDto> newsResponseDtoList = new ArrayList<>();
         for (ServiceNewsResponseDto serviceDto : newsService.readAll()) {
@@ -34,21 +36,25 @@ public class NewsController implements BaseController<NewsRequestDto, NewsRespon
         return newsResponseDtoList;
     }
 
+    @CommandHandler(operation = 2)
     public NewsResponseDto readById(Long newsId) {
         return mapper.mapServiceNewsResponseDto(
                 newsService.readById(newsId));
     }
 
+    @CommandHandler(operation = 3)
     public NewsResponseDto create(NewsRequestDto dtoRequest) {
         return mapper.mapServiceNewsResponseDto(
                 newsService.create(mapper.mapNewsRequestDto(dtoRequest)));
     }
 
+    @CommandHandler(operation = 4)
     public NewsResponseDto update(NewsRequestDto dtoRequest) {
         return mapper.mapServiceNewsResponseDto(
                 newsService.update(mapper.mapNewsRequestDto(dtoRequest)));
     }
 
+    @CommandHandler(operation = 5)
     public boolean deleteById(Long newsId) {
         return newsService.deleteById(newsId);
     }
