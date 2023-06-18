@@ -8,18 +8,21 @@ import com.mjc.school.service.dto.ServiceNewsResponseDto;
 import com.mjc.school.service.mapper.NewsMapper;
 import com.mjc.school.service.validator.annotations.ValidateInput;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNewsResponseDto, Long> {
 
     private final NewsMapper mapper = new NewsMapper();
 
     private final BaseRepository<NewsModel, Long> newsRepository;
 
-    public NewsService(@Qualifier("newsRepository") BaseRepository<NewsModel, Long> newsRepository) {
+    public NewsService(@Qualifier("newsRepository")
+                       BaseRepository<NewsModel, Long> newsRepository) {
         this.newsRepository = newsRepository;
     }
 

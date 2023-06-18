@@ -3,8 +3,6 @@ package com.mjc.school.service.congiguration;
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.NewsModel;
-import com.mjc.school.service.impl.AuthorService;
-import com.mjc.school.service.impl.NewsService;
 import com.mjc.school.service.validator.AuthorRequestDtoValidator;
 import com.mjc.school.service.validator.NewsRequestDtoValidator;
 import com.mjc.school.service.validator.ValidationAspect;
@@ -24,16 +22,6 @@ public class AppConfiguration {
                             @Qualifier("newsRepository") BaseRepository<NewsModel, Long> newsRepository) {
         this.authorRepository = authorRepository;
         this.newsRepository = newsRepository;
-    }
-
-    @Bean
-    public AuthorService authorService() {
-        return new AuthorService(authorRepository, newsRepository);
-    }
-
-    @Bean
-    public NewsService newsService() {
-        return new NewsService(newsRepository);
     }
 
     @Bean

@@ -8,12 +8,14 @@ import com.mjc.school.service.dto.ServiceAuthorRequestDto;
 import com.mjc.school.service.dto.ServiceAuthorResponseDto;
 import com.mjc.school.service.mapper.AuthorMapper;
 import com.mjc.school.service.validator.annotations.ValidateInput;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class AuthorService implements BaseService<ServiceAuthorRequestDto, ServiceAuthorResponseDto, Long> {
 
     private final AuthorMapper mapper = new AuthorMapper();
