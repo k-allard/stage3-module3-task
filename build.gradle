@@ -24,7 +24,7 @@ subprojects {
         testImplementation "org.springframework:spring-test:$springVersion"
         testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
-        testImplementation "com.tngtech.archunit:archunit:$archUnitVersion"
+        testImplementation "com.tngtech.archunit:archunit-junit5:$archUnitVersion"
 
         annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
         implementation "org.mapstruct:mapstruct:$mapstructVersion"
@@ -33,6 +33,8 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok:1.18.22'
         testCompileOnly 'org.projectlombok:lombok:1.18.22'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa:$dataJpaVersion"
     }
     test {
         useJUnitPlatform()
