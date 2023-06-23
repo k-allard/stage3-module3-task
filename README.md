@@ -81,8 +81,8 @@ The system should expose CRUD operations for News, Author and Tag from the __mai
 - [x] Delete News – delete news by provided news id and return boolean value.
 - [x] Delete Author – delete author by provided author id and return boolean value. When deleting author you could
   choose 2 options:
-  - set `authorId` field for corresponding news to `null`.
-  - remove corresponding news.
+    - set `authorId` field for corresponding news to `null`.
+    - remove corresponding news.
 
   Instead of explicitly maintaining data consistency (deleting related entities together with the parent one manually),
   you should pay attention to the correct description of relationships between entities using JPA
