@@ -1,6 +1,6 @@
 CREATE SEQUENCE IF NOT EXISTS hibernate_sequence START WITH 1 INCREMENT BY 1;
 
-CREATE TABLE authors
+CREATE TABLE IF NOT EXISTS authors
 (
     id               BIGINT NOT NULL,
     name             VARCHAR(255),
