@@ -17,27 +17,17 @@ public class NewsRepository implements BaseRepository<NewsModel, Long> {
 
     @Override
     public List<NewsModel> readAll() {
-        return dataSource.getNewsModelList();
+        return null;
     }
 
     @Override
     public Optional<NewsModel> readById(Long id) {
-        return dataSource.getNewsModelList().stream()
-                .filter(news -> id.equals(news.getId()))
-                .findFirst();
+        return null;
     }
 
     @Override
     public NewsModel create(NewsModel newNews) {
-        List<NewsModel> newsList = dataSource.getNewsModelList();
-        newsList.sort(Comparator.comparing(NewsModel::getId));
-        if (!newsList.isEmpty()) {
-            newNews.setId(newsList.get(newsList.size() - 1).getId() + 1);
-        } else {
-            newNews.setId(1L);
-        }
-        newsList.add(newNews);
-        return newNews;
+        return null;
     }
 
     @Override
@@ -52,12 +42,11 @@ public class NewsRepository implements BaseRepository<NewsModel, Long> {
 
     @Override
     public boolean deleteById(Long id) {
-        return dataSource.getNewsModelList().remove(new NewsModel(id));
+        return false;
     }
 
     @Override
     public boolean existById(Long id) {
-        int indexOfNews = dataSource.getNewsModelList().indexOf(new NewsModel(id));
-        return indexOfNews != -1;
+        return false;
     }
 }

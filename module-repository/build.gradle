@@ -1,8 +1,7 @@
 dependencies {
     implementation 'org.flywaydb:flyway-core:9.19.4'
     implementation 'org.hibernate:hibernate-core:5.6.10.Final'
-    implementation 'javax.persistence:javax.persistence-api:'
-    implementation 'net.bytebuddy:byte-buddy:1.12.10'
-    implementation 'org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec:'
+    implementation 'ch.qos.logback:logback-classic:1.4.8'
+    implementation 'com.h2database:h2:2.1.214'
 
 }
