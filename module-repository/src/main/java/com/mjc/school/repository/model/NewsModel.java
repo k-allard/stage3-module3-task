@@ -27,7 +27,6 @@ public class NewsModel implements BaseEntity<Long> {
     private String content;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private Long authorId;
 
     public NewsModel(Long id) {
         this.id = id;

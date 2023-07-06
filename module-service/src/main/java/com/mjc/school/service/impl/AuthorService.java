@@ -73,7 +73,6 @@ public class AuthorService implements BaseService<ServiceAuthorRequestDto, Servi
     @Override
     @ValidateInput
     public boolean deleteById(Long id) {
-        newsRepository.readAll().removeIf(news -> Objects.equals(news.getAuthorId(), id));
-        return authorRepository.deleteById(id);
+        return false;
     }
 }

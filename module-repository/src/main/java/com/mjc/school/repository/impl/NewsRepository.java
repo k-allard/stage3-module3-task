@@ -32,12 +32,7 @@ public class NewsRepository implements BaseRepository<NewsModel, Long> {
 
     @Override
     public NewsModel update(NewsModel newsModel) {
-        NewsModel newsModelFromRepo = readById(newsModel.getId()).get();
-        newsModelFromRepo.setTitle(newsModel.getTitle());
-        newsModelFromRepo.setContent(newsModel.getContent());
-        newsModelFromRepo.setAuthorId(newsModel.getAuthorId());
-        newsModelFromRepo.setLastUpdateDate(LocalDateTime.now());
-        return newsModelFromRepo;
+        return null;
     }
 
     @Override
