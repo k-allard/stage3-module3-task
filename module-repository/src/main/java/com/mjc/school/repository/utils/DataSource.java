@@ -29,6 +29,5 @@ public class DataSource {
         var dbPassword = configuration.getProperty("hibernate.connection.password");
         new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
 
-        buildSessionFactory(Author.class, NewsModel.class, Tag.class);
     }
 }

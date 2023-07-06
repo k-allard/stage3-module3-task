@@ -73,6 +73,7 @@ public class AuthorService implements BaseService<ServiceAuthorRequestDto, Servi
     @Override
     @ValidateInput
     public boolean deleteById(Long id) {
-        return false;
+        //TODO check that related news are also deleted
+        return authorRepository.deleteById(id);
     }
 }
