@@ -38,10 +38,6 @@ public class Author implements BaseEntity<Long> {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "author_id")
-    private List<NewsModel> news;
-
     public Author(Long id) {
         this.id = id;
     }

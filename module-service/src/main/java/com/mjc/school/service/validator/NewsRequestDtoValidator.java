@@ -2,7 +2,7 @@ package com.mjc.school.service.validator;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.repository.model.News;
 import com.mjc.school.service.dto.ServiceNewsRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
@@ -15,10 +15,10 @@ import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_STRING_
 public class NewsRequestDtoValidator {
 
     private final BaseRepository<Author, Long> authorRepository;
-    private final BaseRepository<NewsModel, Long> newsRepository;
+    private final BaseRepository<News, Long> newsRepository;
 
     public NewsRequestDtoValidator(BaseRepository<Author, Long> authorRepository,
-                                   BaseRepository<NewsModel, Long> newsRepository) {
+                                   BaseRepository<News, Long> newsRepository) {
         this.authorRepository = authorRepository;
         this.newsRepository = newsRepository;
     }

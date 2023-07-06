@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -19,7 +21,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "news")
-public class NewsModel implements BaseEntity<Long> {
+public class News implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +30,11 @@ public class NewsModel implements BaseEntity<Long> {
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
 
-    public NewsModel(Long id) {
+    @ManyToOne
+    @JoinColumn(name="author_id")
+    private Author author;
+
+    public News(Long id) {
         this.id = id;
     }
 
@@ -38,8 +44,8 @@ public class NewsModel implements BaseEntity<Long> {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        NewsModel newsModel = (NewsModel) o;
-        return id.equals(newsModel.id);
+        News news = (News) o;
+        return id.equals(news.id);
     }
 
     @Override

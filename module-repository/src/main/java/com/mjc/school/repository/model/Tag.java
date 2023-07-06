@@ -33,6 +33,6 @@ public class Tag implements BaseEntity<Long> {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "tag_news", joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "news_id"))
-    private List<NewsModel> news;
+    private List<News> news;
 
 }

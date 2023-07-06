@@ -1,11 +1,10 @@
 package com.mjc.school.repository.utils;
 
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.Tag;
 import lombok.Getter;
 import org.hibernate.Session;
-import org.hibernate.SessionBuilder;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.Metadata;
@@ -22,7 +21,7 @@ public final class HibernateUtils {
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
     @Getter
-    private static final SessionFactory sf = buildSessionFactory(Author .class, NewsModel .class, Tag .class);
+    private static final SessionFactory sf = buildSessionFactory(Author .class, News.class, Tag .class);
 
     private HibernateUtils() {
     }

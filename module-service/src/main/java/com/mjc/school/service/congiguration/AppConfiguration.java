@@ -2,7 +2,7 @@ package com.mjc.school.service.congiguration;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.repository.model.News;
 import com.mjc.school.service.validator.AuthorRequestDtoValidator;
 import com.mjc.school.service.validator.NewsRequestDtoValidator;
 import com.mjc.school.service.validator.ValidationAspect;
@@ -16,10 +16,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class AppConfiguration {
 
     BaseRepository<Author, Long> authorRepository;
-    BaseRepository<NewsModel, Long> newsRepository;
+    BaseRepository<News, Long> newsRepository;
 
     public AppConfiguration(@Qualifier("authorRepository") BaseRepository<Author, Long> authorRepository,
-                            @Qualifier("newsRepository") BaseRepository<NewsModel, Long> newsRepository) {
+                            @Qualifier("newsRepository") BaseRepository<News, Long> newsRepository) {
         this.authorRepository = authorRepository;
         this.newsRepository = newsRepository;
     }

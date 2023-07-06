@@ -37,13 +37,15 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
     }
 
     @Override
-    public Author update(Author entity) {
+    public Author update(Author author) {
         doInSessionWithTransaction(session ->
-                session.createQuery("update Author a set a.name = :newName where a.id = :id")
-                        .setParameter("newName", entity.getName())
-                        .setParameter("id", entity.getId())
+                session.createQuery("update Author a set " +
+                                "a.name = :newName, " +
+                                "a.lastUpdateDate = CURRENT_TIMESTAMP where a.id = :id")
+                        .setParameter("newName", author.getName())
+                        .setParameter("id", author.getId())
                         .executeUpdate());
-        return readById(entity.getId()).get();
+        return readById(author.getId()).get();
     }
 
     @Override

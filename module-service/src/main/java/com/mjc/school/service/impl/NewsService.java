@@ -1,7 +1,7 @@
 package com.mjc.school.service.impl;
 
 import com.mjc.school.repository.BaseRepository;
-import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.repository.model.News;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.dto.ServiceNewsRequestDto;
 import com.mjc.school.service.dto.ServiceNewsResponseDto;
@@ -19,18 +19,18 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
 
     private final NewsMapper mapper = new NewsMapper();
 
-    private final BaseRepository<NewsModel, Long> newsRepository;
+    private final BaseRepository<News, Long> newsRepository;
 
     public NewsService(@Qualifier("newsRepository")
-                       BaseRepository<NewsModel, Long> newsRepository) {
+                       BaseRepository<News, Long> newsRepository) {
         this.newsRepository = newsRepository;
     }
 
     @Override
     public List<ServiceNewsResponseDto> readAll() {
         List<ServiceNewsResponseDto> newsDtoList = new ArrayList<>();
-        for (NewsModel newsModel : newsRepository.readAll()) {
-            newsDtoList.add(mapper.mapModelToResponseDto(newsModel));
+        for (News news : newsRepository.readAll()) {
+            newsDtoList.add(mapper.mapModelToResponseDto(news));
         }
         return newsDtoList;
     }
@@ -38,13 +38,14 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     @Override
     @ValidateInput
     public ServiceNewsResponseDto readById(Long id) {
-        NewsModel newsModel = newsRepository.readById(id).get();
-        return mapper.mapModelToResponseDto(newsModel);
+        News news = newsRepository.readById(id).get();
+        return mapper.mapModelToResponseDto(news);
     }
 
     @Override
     @ValidateInput
     public ServiceNewsResponseDto create(ServiceNewsRequestDto news) {
+        System.out.println("ServiceNewsRequestDto auth id is " + news.getAuthorId());
         ServiceNewsResponseDto newNews =
                 new ServiceNewsResponseDto(
                         null,
@@ -53,9 +54,13 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
                         LocalDateTime.now(),
                         LocalDateTime.now(),
                         news.getAuthorId());
-        return mapper.mapModelToResponseDto(newsRepository.create(
-                mapper.mapResponseDtoToModel(newNews)
+        News model = mapper.mapRequestDtoToModel(news);
+        System.out.println("NewsModel auth id is " + model.getAuthor().getId());
+        ServiceNewsResponseDto serviceNewsResponseDto = mapper.mapModelToResponseDto(newsRepository.create(
+                model
         ));
+        System.out.println("ServiceNewsResponseDto auth id is " + serviceNewsResponseDto.getAuthor_id());
+        return serviceNewsResponseDto;
     }
 
     @Override

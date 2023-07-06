@@ -25,7 +25,7 @@ public class NewsResponseDto {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-        return "NewsDTOResponse[" +
+        return "\nNewsDTOResponse[" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +

@@ -2,7 +2,7 @@ package com.mjc.school.service.impl;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.repository.model.News;
 import com.mjc.school.service.BaseService;
 import com.mjc.school.service.dto.ServiceAuthorRequestDto;
 import com.mjc.school.service.dto.ServiceAuthorResponseDto;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class AuthorService implements BaseService<ServiceAuthorRequestDto, ServiceAuthorResponseDto, Long> {
@@ -22,11 +21,11 @@ public class AuthorService implements BaseService<ServiceAuthorRequestDto, Servi
 
     private final BaseRepository<Author, Long> authorRepository;
 
-    private final BaseRepository<NewsModel, Long> newsRepository;
+    private final BaseRepository<News, Long> newsRepository;
 
 
     public AuthorService(BaseRepository<Author, Long> authorRepository,
-                         BaseRepository<NewsModel, Long> newsRepository) {
+                         BaseRepository<News, Long> newsRepository) {
         this.authorRepository = authorRepository;
         this.newsRepository = newsRepository;
     }
