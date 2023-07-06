@@ -30,7 +30,10 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     public List<ServiceNewsResponseDto> readAll() {
         List<ServiceNewsResponseDto> newsDtoList = new ArrayList<>();
         for (News news : newsRepository.readAll()) {
-            newsDtoList.add(mapper.mapModelToResponseDto(news));
+            System.out.println("model from repo has author with id " + news.getAuthor().getId());
+            ServiceNewsResponseDto newsResponseDto = mapper.mapModelToResponseDto(news);
+            System.out.println("mapped dto has author with id " + newsResponseDto.getAuthorId());
+            newsDtoList.add(newsResponseDto);
         }
         return newsDtoList;
     }
@@ -45,7 +48,6 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     @Override
     @ValidateInput
     public ServiceNewsResponseDto create(ServiceNewsRequestDto news) {
-        System.out.println("ServiceNewsRequestDto auth id is " + news.getAuthorId());
         ServiceNewsResponseDto newNews =
                 new ServiceNewsResponseDto(
                         null,
@@ -54,12 +56,10 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
                         LocalDateTime.now(),
                         LocalDateTime.now(),
                         news.getAuthorId());
-        News model = mapper.mapRequestDtoToModel(news);
-        System.out.println("NewsModel auth id is " + model.getAuthor().getId());
+        News model = mapper.mapResponseDtoToModel(newNews);
         ServiceNewsResponseDto serviceNewsResponseDto = mapper.mapModelToResponseDto(newsRepository.create(
                 model
         ));
-        System.out.println("ServiceNewsResponseDto auth id is " + serviceNewsResponseDto.getAuthor_id());
         return serviceNewsResponseDto;
     }
 

@@ -18,7 +18,7 @@ public class ServiceNewsResponseDto {
     private String content;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private Long author_id;
+    private Long authorId;
 
     @Override
     public String toString() {
@@ -31,7 +31,7 @@ public class ServiceNewsResponseDto {
                 ", content='" + content + '\'' +
                 ", createDate=" + formatter.format(createDate) +
                 ", lastUpdateDate=" + formatter.format(lastUpdateDate) +
-                ", authorId=" + author_id +
+                ", authorId=" + authorId +
                 ']';
     }
 }
