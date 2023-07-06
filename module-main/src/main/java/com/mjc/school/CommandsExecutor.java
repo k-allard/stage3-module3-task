@@ -12,11 +12,17 @@ import com.mjc.school.commands.news.DeleteNewsCommand;
 import com.mjc.school.commands.news.ReadAllNewsCommand;
 import com.mjc.school.commands.news.ReadNewsByIdCommand;
 import com.mjc.school.commands.news.UpdateNewsCommand;
+import com.mjc.school.commands.tag.CreateTagCommand;
+import com.mjc.school.commands.tag.DeleteTagCommand;
+import com.mjc.school.commands.tag.ReadAllTagsCommand;
+import com.mjc.school.commands.tag.ReadTagByIdCommand;
+import com.mjc.school.commands.tag.UpdateTagCommand;
 import com.mjc.school.controller.BaseController;
 import com.mjc.school.controller.dto.AuthorRequestDto;
 import com.mjc.school.controller.dto.AuthorResponseDto;
 import com.mjc.school.controller.dto.NewsRequestDto;
 import com.mjc.school.controller.dto.NewsResponseDto;
+import com.mjc.school.controller.dto.TagDto;
 import com.mjc.school.exceptions.IdFormatException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -26,15 +32,19 @@ public class CommandsExecutor {
 
     private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController;
     private final BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController;
+    private final BaseController<TagDto, TagDto, Long> tagController;
 
     private final TerminalCommandsReader commandsReader = new TerminalCommandsReader();
 
     public CommandsExecutor(@Qualifier("newsController")
                             BaseController<NewsRequestDto, NewsResponseDto, Long> newsController,
                             @Qualifier("authorController")
-                            BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController) {
+                            BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController,
+                            @Qualifier("tagController")
+                            BaseController<TagDto, TagDto, Long> tagController) {
         this.newsController = newsController;
         this.authorController = authorController;
+        this.tagController = tagController;
     }
 
     public void executeCommand(CommandType commandType) throws Throwable {
@@ -74,8 +84,26 @@ public class CommandsExecutor {
                             requestAuthorId(),
                             requestAuthorName()));
             case REMOVE_AUTHOR_BY_ID -> new DeleteAuthorCommand(authorController, requestAuthorId());
+            case GET_ALL_TAGS -> new ReadAllTagsCommand(tagController);
+            case GET_TAG_BY_ID -> new ReadTagByIdCommand(tagController, requestTagId());
+            case CREATE_TAG -> new CreateTagCommand(tagController, new TagDto(null, requestTagName()));
+            case UPDATE_TAG -> new UpdateTagCommand(tagController, new TagDto(requestTagId(), requestTagName()));
+            case REMOVE_TAG_BY_ID -> new DeleteTagCommand(tagController, requestTagId());
             default -> throw new IllegalStateException("Unexpected commandType: " + commandType);
         };
+    }
+
+    private String requestTagName() {
+        return commandsReader.requestResponseByPrompt("Enter tag name:");
+    }
+
+    private Long requestTagId() {
+        try {
+            return Long.parseLong(commandsReader.requestResponseByPrompt("Enter tag id:"));
+        } catch (NumberFormatException e) {
+            throw new IdFormatException(
+                    "ERROR_CODE: 05 ERROR_MESSAGE: Tag id should be number");
+        }
     }
 
     private long requestNewsId() {

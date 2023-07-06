@@ -21,6 +21,16 @@ public enum CommandType {
 
     REMOVE_AUTHOR_BY_ID(10, "Remove author by id."),
 
+    GET_ALL_TAGS(11, "Get all tags."),
+
+    GET_TAG_BY_ID(12, "Get tag by id."),
+
+    CREATE_TAG(13, "Create tag."),
+
+    UPDATE_TAG(14, "Update tag."),
+
+    REMOVE_TAG_BY_ID(15, "Remove tag by id."),
+
     EXIT(0, "Exit.");
 
     public final int code;

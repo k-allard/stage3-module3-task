@@ -2,6 +2,7 @@ package com.mjc.school.service.validator;
 
 import com.mjc.school.service.dto.ServiceAuthorRequestDto;
 import com.mjc.school.service.dto.ServiceNewsRequestDto;
+import com.mjc.school.service.dto.ServiceTagDto;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,11 +15,14 @@ public class ValidationAspect {
     private final NewsRequestDtoValidator newsValidator;
 
     private final AuthorRequestDtoValidator authorValidator;
+    private final TagDtoValidator tagValidator;
 
     public ValidationAspect(NewsRequestDtoValidator newsValidator,
-                            AuthorRequestDtoValidator authorValidator) {
+                            AuthorRequestDtoValidator authorValidator,
+                            TagDtoValidator tagValidator) {
         this.newsValidator = newsValidator;
         this.authorValidator = authorValidator;
+        this.tagValidator = tagValidator;
     }
 
     @Before(value = "@annotation(com.mjc.school.service.validator.annotations.ValidateInput)")
@@ -44,15 +48,23 @@ public class ValidationAspect {
                 authorValidator.validateAuthorId(id);
             else if (className.contains("NewsService"))
                 newsValidator.validateNewsId(id);
+            else if (className.contains("TagService"))
+                tagValidator.validateTagId(id);
             else {
                 log.error("@ValidateInput does not know how to validate IDs in "
-                        + className + "yet\n" + "No validation will be performed");
+                        + className + " yet\n" + "No validation will be performed");
             }
         } else if (requestObject[0] instanceof ServiceAuthorRequestDto author) {
             log.debug("Started executing validateInput advice for AuthorRequestDto parameter");
             authorValidator.validateAuthorDTO(author);
             if (joinPoint.getSignature().getName().equals("update")) {
                 authorValidator.validateAuthorId(author.getId());
+            }
+        } else if (requestObject[0] instanceof ServiceTagDto tag) {
+            log.debug("Started executing validateInput advice for ServiceTagDto parameter");
+            tagValidator.validateTagDTO(tag);
+            if (joinPoint.getSignature().getName().equals("update")) {
+                tagValidator.validateTagId(tag.getId());
             }
         } else {
             log.warn("@ValidateInput annotation does not support validation for parameter of "

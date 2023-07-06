@@ -6,6 +6,7 @@ import com.mjc.school.controller.dto.AuthorRequestDto;
 import com.mjc.school.controller.dto.AuthorResponseDto;
 import com.mjc.school.controller.dto.NewsRequestDto;
 import com.mjc.school.controller.dto.NewsResponseDto;
+import com.mjc.school.controller.dto.TagDto;
 
 import java.lang.reflect.Method;
 
@@ -39,4 +40,19 @@ public interface Command {
         }
         throw new IllegalStateException("Unexpected commandType: " + commandType);
     }
+
+    default Method getTagMethod(
+            BaseController<TagDto, TagDto, Long> controller,
+            CommandType commandType
+    ) {
+        for (final Method method : controller.getClass().getDeclaredMethods()) {
+            if (method.isAnnotationPresent(CommandHandler.class)) {
+                if (method.getAnnotation(CommandHandler.class).code() == commandType.code) {
+                    return method;
+                }
+            }
+        }
+        throw new IllegalStateException("Unexpected commandType: " + commandType);
+    }
+
 }
