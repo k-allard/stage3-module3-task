@@ -3,12 +3,8 @@ package com.mjc.school.repository.utils;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.repository.model.Tag;
-import lombok.Getter;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.cfg.Configuration;
-
-import java.util.List;
 
 import static com.mjc.school.repository.utils.HibernateUtils.buildSessionFactory;
 

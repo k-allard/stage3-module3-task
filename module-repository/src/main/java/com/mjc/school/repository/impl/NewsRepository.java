@@ -5,8 +5,6 @@ import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.repository.utils.DataSource;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
