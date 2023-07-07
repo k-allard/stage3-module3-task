@@ -31,6 +31,12 @@ public enum CommandType {
 
     REMOVE_TAG_BY_ID(15, "Remove tag by id."),
 
+    GET_AUTHOR_BY_NEWS_ID(16, "Get author by news id."),
+
+    GET_TAGS_BY_NEWS_ID(17, "Get tags by news id."),
+
+    GET_NEWS_BY_PARAMS(18, "Get news by parameters."),
+
     EXIT(0, "Exit.");
 
     public final int code;

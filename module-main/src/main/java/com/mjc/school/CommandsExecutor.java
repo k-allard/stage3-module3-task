@@ -6,18 +6,22 @@ import com.mjc.school.commands.author.CreateAuthorCommand;
 import com.mjc.school.commands.author.DeleteAuthorCommand;
 import com.mjc.school.commands.author.ReadAllAuthorsCommand;
 import com.mjc.school.commands.author.ReadAuthorByIdCommand;
+import com.mjc.school.commands.author.ReadAuthorByNewsIdCommand;
 import com.mjc.school.commands.author.UpdateAuthorCommand;
 import com.mjc.school.commands.news.CreateNewsCommand;
 import com.mjc.school.commands.news.DeleteNewsCommand;
 import com.mjc.school.commands.news.ReadAllNewsCommand;
 import com.mjc.school.commands.news.ReadNewsByIdCommand;
+import com.mjc.school.commands.news.ReadNewsByParamsCommand;
 import com.mjc.school.commands.news.UpdateNewsCommand;
 import com.mjc.school.commands.tag.CreateTagCommand;
 import com.mjc.school.commands.tag.DeleteTagCommand;
 import com.mjc.school.commands.tag.ReadAllTagsCommand;
 import com.mjc.school.commands.tag.ReadTagByIdCommand;
+import com.mjc.school.commands.tag.ReadTagByNewsIdCommand;
 import com.mjc.school.commands.tag.UpdateTagCommand;
 import com.mjc.school.controller.BaseController;
+import com.mjc.school.controller.ExtendedController;
 import com.mjc.school.controller.dto.AuthorRequestDto;
 import com.mjc.school.controller.dto.AuthorResponseDto;
 import com.mjc.school.controller.dto.NewsRequestDto;
@@ -27,13 +31,16 @@ import com.mjc.school.exceptions.IdFormatException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CommandsExecutor {
 
     private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController;
     private final BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController;
     private final BaseController<TagDto, TagDto, Long> tagController;
-
+    private final ExtendedController extendedController;
     private final TerminalCommandsReader commandsReader = new TerminalCommandsReader();
 
     public CommandsExecutor(@Qualifier("newsController")
@@ -41,10 +48,12 @@ public class CommandsExecutor {
                             @Qualifier("authorController")
                             BaseController<AuthorRequestDto, AuthorResponseDto, Long> authorController,
                             @Qualifier("tagController")
-                            BaseController<TagDto, TagDto, Long> tagController) {
+                            BaseController<TagDto, TagDto, Long> tagController,
+                            ExtendedController extendedController) {
         this.newsController = newsController;
         this.authorController = authorController;
         this.tagController = tagController;
+        this.extendedController = extendedController;
     }
 
     public void executeCommand(CommandType commandType) throws Throwable {
@@ -89,8 +98,30 @@ public class CommandsExecutor {
             case CREATE_TAG -> new CreateTagCommand(tagController, new TagDto(null, requestTagName()));
             case UPDATE_TAG -> new UpdateTagCommand(tagController, new TagDto(requestTagId(), requestTagName()));
             case REMOVE_TAG_BY_ID -> new DeleteTagCommand(tagController, requestTagId());
+            case GET_AUTHOR_BY_NEWS_ID -> new ReadAuthorByNewsIdCommand(extendedController, requestNewsId());
+            case GET_TAGS_BY_NEWS_ID -> new ReadTagByNewsIdCommand(extendedController, requestNewsId());
+            case GET_NEWS_BY_PARAMS -> new ReadNewsByParamsCommand(extendedController,
+                    requestTagsIds(),
+                    requestTagName(),
+                    requestAuthorName(),
+                    requestNewsTitle(),
+                    requestNewsContent());
             default -> throw new IllegalStateException("Unexpected commandType: " + commandType);
         };
+    }
+
+    private List<Long> requestTagsIds() {
+        List<Long> result = new ArrayList<>();
+        String[] ids = commandsReader.requestResponseByPrompt("Enter tags ids separated by space:").split(" ");
+        for (String id : ids) {
+            try {
+                result.add(Long.parseLong(id));
+            } catch (NumberFormatException e) {
+                throw new IdFormatException(
+                        "ERROR_CODE: 05 ERROR_MESSAGE: Tag id should be number");
+            }
+        }
+        return result;
     }
 
     private String requestTagName() {
