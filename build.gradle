@@ -35,7 +35,7 @@ subprojects {
         testCompileOnly 'org.projectlombok:lombok:1.18.22'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-//        implementation "org.springframework.boot:spring-boot-starter-data-jpa:$dataJpaVersion"
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa:$dataJpaVersion"
     }
     test {
         useJUnitPlatform()
