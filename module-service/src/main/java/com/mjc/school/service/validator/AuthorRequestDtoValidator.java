@@ -5,11 +5,13 @@ import com.mjc.school.repository.model.Author;
 import com.mjc.school.service.dto.ServiceAuthorRequestDto;
 import com.mjc.school.service.exceptions.NotFoundException;
 import com.mjc.school.service.exceptions.ValidatorException;
+import org.springframework.stereotype.Component;
 
 import static com.mjc.school.service.exceptions.ExceptionsCodes.AUTHOR_ID_DOES_NOT_EXIST;
 import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_NEGATIVE_OR_NULL_NUMBER;
 import static com.mjc.school.service.exceptions.ExceptionsCodes.VALIDATE_STRING_LENGTH;
 
+@Component
 public class AuthorRequestDtoValidator {
 
     private final BaseRepository<Author, Long> authorRepository;
