@@ -2,32 +2,38 @@ package com.mjc.school.repository.impl;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Tag;
-import com.mjc.school.repository.utils.HibernateUtils;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static com.mjc.school.repository.utils.HibernateUtils.doInSessionWithTransaction;
+import static com.mjc.school.repository.utils.JPAUtils.doInSessionWithTransaction;
 
 @Repository
 public class TagRepository implements BaseRepository<Tag, Long> {
 
     @Override
     public List<Tag> readAll() {
-        try (Session session = HibernateUtils.getSf().openSession()) {
-            return session.createQuery("select n from Tag n", Tag.class).list();
-        }
+        AtomicReference<List<Tag>> resultList = new AtomicReference<>();
+        doInSessionWithTransaction(session ->
+                resultList.set(
+                        session.createQuery("select n from Tag n", Tag.class).getResultList()
+                ));
+        return resultList.get();
     }
 
     @Override
     public Optional<Tag> readById(Long id) {
-        try (Session session = HibernateUtils.getSf().openSession()) {
-            String jpqlSelectById = "select a from Tag a where a.id = :id";
-            return session.createQuery(jpqlSelectById, Tag.class).setParameter("id", id).uniqueResultOptional();
-        }
+        AtomicReference<Optional<Tag>> result = new AtomicReference<>();
+        doInSessionWithTransaction(session ->
+                result.set(
+                        Optional.ofNullable(session.createQuery("select a from Tag a where a.id = :id", Tag.class)
+                                .setParameter("id", id)
+                                .getSingleResult())
+                ));
+        return result.get();
     }
 
     @Override

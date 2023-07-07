@@ -4,29 +4,29 @@ import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.Tag;
 import lombok.Getter;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public final class HibernateUtils {
+public final class JPAUtils {
 
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
     @Getter
-    private static final SessionFactory sf = buildSessionFactory(Author .class, News.class, Tag .class);
+    private static final EntityManagerFactory sf = buildSessionFactory(Author.class, News.class, Tag.class);
 
-    private HibernateUtils() {
+    private JPAUtils() {
     }
 
-    public static SessionFactory buildSessionFactory(Configuration configuration, Class<?>... annotatedClasses) {
+    public static EntityManagerFactory buildSessionFactory(Configuration configuration, Class<?>... annotatedClasses) {
         MetadataSources metadataSources = new MetadataSources(createServiceRegistry(configuration));
         Arrays.stream(annotatedClasses).forEach(metadataSources::addAnnotatedClass);
 
@@ -34,12 +34,7 @@ public final class HibernateUtils {
         return metadata.getSessionFactoryBuilder().build();
     }
 
-    public static SessionFactory buildSessionFactory(String configResourceName, Class<?>... annotatedClasses) {
-        Configuration configuration = new Configuration().configure(configResourceName);
-        return buildSessionFactory(configuration, annotatedClasses);
-    }
-
-    public static SessionFactory buildSessionFactory(Class<?>... annotatedClasses) {
+    public static EntityManagerFactory buildSessionFactory(Class<?>... annotatedClasses) {
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
         return buildSessionFactory(configuration, annotatedClasses);
     }
@@ -49,23 +44,16 @@ public final class HibernateUtils {
                 .applySettings(configuration.getProperties()).build();
     }
 
-    public static void doInSession(Consumer<Session> action) {
-        try (Session session = sf.openSession()) {
+    public static void doInSessionWithTransaction(Consumer<EntityManager> action) {
+        EntityManager session = sf.createEntityManager();
+        EntityTransaction t = session.getTransaction();
+        t.begin();
+        try {
             action.accept(session);
-        }
-    }
-
-    public static void doInSessionWithTransaction(Consumer<Session> action) {
-        try (Session session = sf.openSession()) {
-            Transaction t = session.getTransaction();
-            t.begin();
-            try {
-                action.accept(session);
-                t.commit();
-            } catch (Exception e){
-                t.rollback();
-                throw e;
-            }
+            t.commit();
+        } catch (Exception e) {
+            t.rollback();
+            throw e;
         }
     }
 }

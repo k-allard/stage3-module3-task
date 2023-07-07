@@ -1,30 +1,14 @@
 package com.mjc.school.repository.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.cfg.Configuration;
-
-import static com.mjc.school.repository.utils.HibernateUtils.buildSessionFactory;
 
 @Slf4j
 public class DataSource {
-    //    @Getter
-//    private final List<NewsModel> newsModelList;
-//
-//    @Getter
-//    private final List<Author> authorList;
-    public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
-
+    public static final String DB_URL = "jdbc:postgresql://localhost:5430/demoDB";
+    public static final String DB_USERNAME = "usr";
+    public static final String DB_PASSWORD = "pwd";
 
     public DataSource() {
-//        DataInitializer dataInitializer = new DataInitializer();
-//        authorList = dataInitializer.initializeAuthorList();
-//        newsModelList = dataInitializer.initializeNewsList(authorList);
-        var configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
-
-        var dbUrl = configuration.getProperty("hibernate.connection.url");
-        var dbUserName = configuration.getProperty("hibernate.connection.username");
-        var dbPassword = configuration.getProperty("hibernate.connection.password");
-        new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
-
+        new MigrationsExecutorFlyway(DB_URL, DB_USERNAME, DB_PASSWORD).executeMigrations();
     }
 }

@@ -46,9 +46,7 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     public List<ServiceNewsResponseDto> readAll() {
         List<ServiceNewsResponseDto> newsDtoList = new ArrayList<>();
         for (News news : newsRepository.readAll()) {
-            System.out.println("model from repo has author with id " + news.getAuthor().getId());
             ServiceNewsResponseDto newsResponseDto = newsMapper.mapModelToResponseDto(news);
-            System.out.println("mapped dto has author with id " + newsResponseDto.getAuthorId());
             newsDtoList.add(newsResponseDto);
         }
         return newsDtoList;

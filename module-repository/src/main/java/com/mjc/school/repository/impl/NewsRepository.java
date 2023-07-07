@@ -6,8 +6,6 @@ import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.Tag;
 import com.mjc.school.repository.utils.DataSource;
-import com.mjc.school.repository.utils.HibernateUtils;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -21,7 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.mjc.school.repository.utils.HibernateUtils.doInSessionWithTransaction;
+import static com.mjc.school.repository.utils.JPAUtils.doInSessionWithTransaction;
 
 @Repository
 public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepository {
@@ -31,17 +29,24 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
 
     @Override
     public List<News> readAll() {
-        try (Session session = HibernateUtils.getSf().openSession()) {
-            return session.createQuery("select n from News n", News.class).list();
-        }
+        AtomicReference<List<News>> resultList = new AtomicReference<>();
+        doInSessionWithTransaction(session ->
+                resultList.set(
+                        session.createQuery("select n from News n", News.class).getResultList()
+                ));
+        return resultList.get();
     }
 
     @Override
     public Optional<News> readById(Long id) {
-        try (Session session = HibernateUtils.getSf().openSession()) {
-            String jpqlSelectById = "select a from News a where a.id = :id";
-            return session.createQuery(jpqlSelectById, News.class).setParameter("id", id).uniqueResultOptional();
-        }
+        AtomicReference<Optional<News>> result = new AtomicReference<>();
+        doInSessionWithTransaction(session ->
+                result.set(
+                        Optional.ofNullable(session.createQuery("select a from News a where a.id = :id", News.class)
+                                .setParameter("id", id)
+                                .getSingleResult())
+                ));
+        return result.get();
     }
 
     @Override

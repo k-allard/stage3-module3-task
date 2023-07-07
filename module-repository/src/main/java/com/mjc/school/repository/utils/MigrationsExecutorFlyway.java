@@ -17,8 +17,8 @@ public class MigrationsExecutorFlyway {
     }
 
     public void executeMigrations() {
-        logger.warn("db migration started...");
+        logger.info("db migration started...");
         flyway.migrate();
-        logger.warn("db migration finished.");
+        logger.info("db migration finished.");
     }
 }
