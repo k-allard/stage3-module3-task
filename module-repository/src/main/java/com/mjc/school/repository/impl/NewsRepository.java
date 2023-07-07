@@ -44,9 +44,10 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
         AtomicReference<Optional<News>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session ->
                 result.set(
-                        Optional.ofNullable(session.createQuery("select a from News a where a.id = :id", News.class)
+                        session.createQuery("select a from News a where a.id = :id", News.class)
                                 .setParameter("id", id)
-                                .getSingleResult())
+                                .getResultList()
+                                .stream().findFirst()
                 ));
         return result.get();
     }

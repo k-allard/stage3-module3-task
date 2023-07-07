@@ -34,10 +34,12 @@ public class TagRepository implements BaseRepository<Tag, Long> {
         AtomicReference<Optional<Tag>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session ->
                 result.set(
-                        Optional.ofNullable(session.createQuery("select a from Tag a where a.id = :id", Tag.class)
+                        session.createQuery("select a from Tag a where a.id = :id", Tag.class)
                                 .setParameter("id", id)
-                                .getSingleResult())
-                ));
+                                .getResultList()
+                                .stream().findFirst()
+                )
+        );
         return result.get();
     }
 

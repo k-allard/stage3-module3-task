@@ -32,9 +32,10 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
         AtomicReference<Optional<Author>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session ->
                 result.set(
-                        Optional.ofNullable(session.createQuery("select a from Author a where a.id = :id", Author.class)
+                        session.createQuery("select a from Author a where a.id = :id", Author.class)
                                 .setParameter("id", id)
-                                .getSingleResult())
+                                .getResultList()
+                                .stream().findFirst()
                 ));
         return result.get();
     }
