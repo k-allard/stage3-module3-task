@@ -16,9 +16,11 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories("com.mjc.school.repository")
 public class JpaConfiguration {
-    public static final String DB_URL = "jdbc:postgresql://localhost:5430/demoDB";
-    public static final String DB_USERNAME = "usr";
-    public static final String DB_PASSWORD = "pwd";
+    public static final String DB_URL = "jdbc:h2:mem:testdb";
+    public static final String DB_USERNAME = "sa";
+    public static final String DB_PASSWORD = "";
+    private static final String DB_DRIVER = "org.h2.Driver";
+
     @Bean
     @Primary
     LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -35,13 +37,15 @@ public class JpaConfiguration {
     private static Properties getHibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty(
-                "hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+                "hibernate.hbm2ddl.auto", "create-drop");
+        hibernateProperties.setProperty(
+                "hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         return hibernateProperties;
     }
 
     private static DataSource dataSource() {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        dataSourceBuilder.driverClassName(DB_DRIVER);
         dataSourceBuilder.url(DB_URL);
         dataSourceBuilder.username(DB_USERNAME);
         dataSourceBuilder.password(DB_PASSWORD);
