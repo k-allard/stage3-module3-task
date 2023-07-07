@@ -5,7 +5,6 @@ import com.mjc.school.repository.ExtendedRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.Tag;
-import com.mjc.school.repository.utils.DataSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -19,18 +18,21 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.mjc.school.repository.utils.JPAUtils.doInSessionWithTransaction;
+import com.mjc.school.repository.utils.JPAUtils;
 
 @Repository
 public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepository {
 
-    //TODO create dataSource some where else
-    private final DataSource dataSource = new DataSource();
+    private final JPAUtils jpaUtils;
+
+    public NewsRepository(JPAUtils jpaUtils) {
+        this.jpaUtils = jpaUtils;
+    }
 
     @Override
     public List<News> readAll() {
         AtomicReference<List<News>> resultList = new AtomicReference<>();
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 resultList.set(
                         session.createQuery("select n from News n", News.class).getResultList()
                 ));
@@ -40,7 +42,7 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
     @Override
     public Optional<News> readById(Long id) {
         AtomicReference<Optional<News>> result = new AtomicReference<>();
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 result.set(
                         Optional.ofNullable(session.createQuery("select a from News a where a.id = :id", News.class)
                                 .setParameter("id", id)
@@ -51,14 +53,14 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
 
     @Override
     public News create(News newNews) {
-        doInSessionWithTransaction(session -> session.persist(newNews));
+        jpaUtils.doInSessionWithTransaction(session -> session.persist(newNews));
         return newNews;
     }
 
     //TODO update news tags (optional)
     @Override
     public News update(News news) {
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 session.createQuery("update News n set " +
                                 "n.title = :newTitle, " +
                                 "n.content = :newContent, " +
@@ -75,7 +77,7 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
     @Override
     public boolean deleteById(Long id) {
         AtomicInteger numDeleted = new AtomicInteger();
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 numDeleted.set(session.createQuery("delete from News where id = :id")
                         .setParameter("id", id)
                         .executeUpdate())
@@ -95,7 +97,7 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
                                        String title,
                                        String content) {
         AtomicReference<List<News>> resultNewsList = new AtomicReference<>();
-        doInSessionWithTransaction(session -> {
+        jpaUtils.doInSessionWithTransaction(session -> {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<News> query = criteriaBuilder.createQuery(News.class);
             Root<News> news = query.from(News.class);

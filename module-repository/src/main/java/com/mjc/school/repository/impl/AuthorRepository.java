@@ -2,6 +2,7 @@ package com.mjc.school.repository.impl;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
+import com.mjc.school.repository.utils.JPAUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,15 +10,17 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.mjc.school.repository.utils.JPAUtils.doInSessionWithTransaction;
-
 @Repository
 public class AuthorRepository implements BaseRepository<Author, Long> {
+    private final JPAUtils jpaUtils;
 
+    public AuthorRepository(JPAUtils jpaUtils) {
+        this.jpaUtils = jpaUtils;
+    }
     @Override
     public List<Author> readAll() {
         AtomicReference<List<Author>> resultList = new AtomicReference<>();
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 resultList.set(
                         session.createQuery("select a from Author a", Author.class).getResultList()
                 ));
@@ -27,7 +30,7 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
     @Override
     public Optional<Author> readById(Long id) {
         AtomicReference<Optional<Author>> result = new AtomicReference<>();
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 result.set(
                         Optional.ofNullable(session.createQuery("select a from Author a where a.id = :id", Author.class)
                                 .setParameter("id", id)
@@ -38,13 +41,13 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
 
     @Override
     public Author create(Author newAuthor) {
-        doInSessionWithTransaction(session -> session.persist(newAuthor));
+        jpaUtils.doInSessionWithTransaction(session -> session.persist(newAuthor));
         return newAuthor;
     }
 
     @Override
     public Author update(Author author) {
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 session.createQuery("update Author a set " +
                                 "a.name = :newName, " +
                                 "a.lastUpdateDate = CURRENT_TIMESTAMP where a.id = :id")
@@ -57,7 +60,7 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
     @Override
     public boolean deleteById(Long id) {
         AtomicInteger numDeleted = new AtomicInteger();
-        doInSessionWithTransaction(session ->
+        jpaUtils.doInSessionWithTransaction(session ->
                 numDeleted.set(session.createQuery("delete from Author where id = :id")
                         .setParameter("id", id)
                         .executeUpdate())
