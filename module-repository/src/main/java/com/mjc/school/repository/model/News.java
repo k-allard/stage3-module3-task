@@ -37,6 +37,7 @@ public class News implements BaseEntity<Long> {
     @JoinColumn(name = "author_id")
     private Author author;
 
+    //TODO when news is removed its tags need to be removed too. rn it causes ConstraintViolationException
     @ManyToMany
     @JoinTable(name = "tag_news",
             joinColumns = @JoinColumn(name = "tag_id"),
