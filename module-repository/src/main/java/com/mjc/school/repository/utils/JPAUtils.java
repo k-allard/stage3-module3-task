@@ -1,7 +1,6 @@
 package com.mjc.school.repository.utils;
 
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -13,12 +12,11 @@ import java.util.function.Consumer;
 public class JPAUtils {
 
     @Getter
-    @Autowired
-    private EntityManagerFactory emf;
+    private final EntityManagerFactory emf;
 
-     public JPAUtils(EntityManagerFactory entityManagerFactory) {
-         emf = entityManagerFactory;
-     }
+    public JPAUtils(EntityManagerFactory entityManagerFactory) {
+        emf = entityManagerFactory;
+    }
 
     public void doInSessionWithTransaction(Consumer<EntityManager> action) {
         EntityManager session = emf.createEntityManager();

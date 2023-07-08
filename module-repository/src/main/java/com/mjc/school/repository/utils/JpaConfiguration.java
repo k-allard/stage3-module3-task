@@ -16,7 +16,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories("com.mjc.school.repository")
 public class JpaConfiguration {
-    public static final String DB_URL = "jdbc:h2:mem:testdb";
+    public static final String DB_URL = "jdbc:h2:file:./newsDB;AUTO_SERVER=TRUE;SCHEMA=PUBLIC";
     public static final String DB_USERNAME = "sa";
     public static final String DB_PASSWORD = "";
     private static final String DB_DRIVER = "org.h2.Driver";
@@ -31,13 +31,17 @@ public class JpaConfiguration {
         factory.setPackagesToScan("com.mjc.school.repository");
         factory.setJpaProperties(getHibernateProperties());
         factory.setJpaVendorAdapter(vendorAdapter);
+
+        MigrationsExecutorFlyway flyway = new MigrationsExecutorFlyway(DB_URL, DB_USERNAME, DB_PASSWORD);
+        flyway.executeMigrations();
+
         return factory;
     }
 
     private static Properties getHibernateProperties() {
         Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "create-drop");
+//        hibernateProperties.setProperty(
+//                "hibernate.hbm2ddl.auto", "create-drop");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         return hibernateProperties;

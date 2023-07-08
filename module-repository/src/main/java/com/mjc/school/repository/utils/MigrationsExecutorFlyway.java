@@ -11,6 +11,7 @@ public class MigrationsExecutorFlyway {
 
     public MigrationsExecutorFlyway(String dbUrl, String dbUserName, String dbPassword) {
         flyway = Flyway.configure()
+                .defaultSchema("PUBLIC")
                 .dataSource(dbUrl, dbUserName, dbPassword)
                 .locations("classpath:/db/migration")
                 .load();
