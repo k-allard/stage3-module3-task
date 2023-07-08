@@ -91,6 +91,7 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
         return readById(id).isPresent();
     }
 
+    //TODO permit empty (not each should be present) params
     @Override
     public List<News> readNewsByParams(List<Long> tagsIds,
                                        String tagName,

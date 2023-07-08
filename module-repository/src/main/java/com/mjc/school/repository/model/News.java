@@ -33,11 +33,13 @@ public class News implements BaseEntity<Long> {
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
 
+    //TODO when author is removed corresponding news need to be removed too
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
 
     //TODO when news is removed its tags need to be removed too. rn it causes ConstraintViolationException
+    //TODO when tag is removed, it need to be removed from the join-table too
     @ManyToMany
     @JoinTable(name = "tag_news",
             joinColumns = @JoinColumn(name = "tag_id"),
