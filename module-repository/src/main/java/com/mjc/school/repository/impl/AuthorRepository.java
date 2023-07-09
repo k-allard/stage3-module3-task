@@ -2,6 +2,7 @@ package com.mjc.school.repository.impl;
 
 import com.mjc.school.repository.BaseRepository;
 import com.mjc.school.repository.model.Author;
+import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.utils.JPAUtils;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,7 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
     public AuthorRepository(JPAUtils jpaUtils) {
         this.jpaUtils = jpaUtils;
     }
+
     @Override
     public List<Author> readAll() {
         AtomicReference<List<Author>> resultList = new AtomicReference<>();
@@ -61,6 +63,13 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
     @Override
     public boolean deleteById(Long id) {
         AtomicInteger numDeleted = new AtomicInteger();
+
+        jpaUtils.doInSessionWithTransaction(session -> {
+            for (News news : session.getReference(Author.class, id).getNews()) {
+                news.setAuthor(null);
+            }
+        });
+
         jpaUtils.doInSessionWithTransaction(session ->
                 numDeleted.set(session.createQuery("delete from Author where id = :id")
                         .setParameter("id", id)
