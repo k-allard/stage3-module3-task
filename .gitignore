@@ -5,3 +5,4 @@
 /module-repository/build/
 /module-service/build/
 /module-web/build/
+*.db
