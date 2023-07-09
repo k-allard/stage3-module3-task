@@ -5,7 +5,7 @@ VALUES ('Michelle Dessler', current_timestamp, current_timestamp),
        ('Chloe Bauer', current_timestamp, current_timestamp),
        ('Anna Palmer', current_timestamp, current_timestamp);
 
-insert into news (content, createdate, lastupdatedate, title, author_id)
+insert into news (content, create_date, last_update_date, title, author_id)
 values ('A Nigerian boy solves a 30-year math equation, is recognized by a Japanese university.', current_timestamp,
         current_timestamp, 'GENERAL PROVISIONS', 1),
        ('Monsanto will close three of its facilities. We are making a difference!', current_timestamp,
