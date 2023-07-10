@@ -34,7 +34,9 @@ public class Author implements BaseEntity<Long> {
     private LocalDateTime createDate;
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
-    @OneToMany(cascade = CascadeType.ALL,
+    @OneToMany(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.DETACH},
             mappedBy = "author")
     private List<News> news;
 
