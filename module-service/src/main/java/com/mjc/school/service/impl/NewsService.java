@@ -98,7 +98,6 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
         return authorMapper.mapModelToResponseDto(authorModel);
     }
 
-    //TODO seems like it doesn't work right
     @Override
     @ValidateInput //TODO add validation of new's id
     public List<ServiceTagDto> readTagsByNewsId(Long id) {

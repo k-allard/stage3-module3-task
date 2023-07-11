@@ -43,8 +43,6 @@ public class News implements BaseEntity<Long> {
     @JoinColumn(name = "author_id")
     private Author author;
 
-    //TODO when news is removed its tags need to be removed too. rn it causes ConstraintViolationException
-    //TODO when tag is removed, it need to be removed from the join-table too
     @ManyToMany(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.REFRESH, CascadeType.DETACH},
