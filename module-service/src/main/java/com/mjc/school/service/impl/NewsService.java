@@ -92,14 +92,14 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     }
 
     @Override
-    @ValidateInput //TODO add validation of new's id
+    @ValidateInput
     public ServiceAuthorResponseDto readAuthorByNewsId(Long id) {
         Author authorModel = newsRepository.readById(id).get().getAuthor();
         return authorMapper.mapModelToResponseDto(authorModel);
     }
 
     @Override
-    @ValidateInput //TODO add validation of new's id
+    @ValidateInput
     public List<ServiceTagDto> readTagsByNewsId(Long id) {
         List<Tag> tags = newsRepository.readById(id).get().getNewsTags();
         List<ServiceTagDto> tagDtos = new ArrayList<>();
