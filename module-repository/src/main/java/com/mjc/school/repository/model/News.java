@@ -50,8 +50,8 @@ public class News implements BaseEntity<Long> {
             CascadeType.REFRESH, CascadeType.DETACH},
             fetch = FetchType.EAGER)
     @JoinTable(name = "tag_news",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "news_id"))
+            joinColumns = @JoinColumn(name = "news_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> newsTags;
 
     public News(Long id) {
