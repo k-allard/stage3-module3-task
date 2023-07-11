@@ -61,7 +61,8 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
                                 "n.title = :newTitle, " +
                                 "n.content = :newContent, " +
                                 "n.author = :newAuthorId, " +
-                                "n.lastUpdateDate = CURRENT_TIMESTAMP where n.id = :id")
+                                "n.lastUpdateDate = CURRENT_TIMESTAMP " +
+                                "where n.id = :id")
                         .setParameter("newTitle", news.getTitle())
                         .setParameter("newContent", news.getContent())
                         .setParameter("newAuthorId", news.getAuthor())

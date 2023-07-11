@@ -32,7 +32,7 @@ public class Author implements BaseEntity<Long> {
     private String name;
     @Column(name = "create_date")
     private LocalDateTime createDate;
-    @Column(name = "last_update_date")
+    @Column(name = "last_update_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdateDate;
     @OneToMany(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
@@ -58,12 +58,4 @@ public class Author implements BaseEntity<Long> {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-//    public void addNewsToAuthor(News newNews) {
-//        if (news == null) {
-//            news = new ArrayList<>();
-//        }
-//        news.add(newNews);
-//        newNews.setAuthor(this);
-//    }
 }

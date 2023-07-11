@@ -37,7 +37,7 @@ public class News implements BaseEntity<Long> {
     private String content;
     @Column(name = "create_date")
     private LocalDateTime createDate;
-    @Column(name = "last_update_date")
+    @Column(name = "last_update_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdateDate;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "author_id")

@@ -53,7 +53,8 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
         jpaUtils.doInSessionWithTransaction(session ->
                 session.createQuery("update Author a set " +
                                 "a.name = :newName, " +
-                                "a.lastUpdateDate = CURRENT_TIMESTAMP where a.id = :id")
+                                "a.lastUpdateDate = CURRENT_TIMESTAMP " +
+                                "where a.id = :id")
                         .setParameter("newName", author.getName())
                         .setParameter("id", author.getId())
                         .executeUpdate());
