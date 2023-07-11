@@ -21,7 +21,7 @@ public class MainApplication {
                         try {
                             commandsExecutor.executeCommand(cmd);
                         } catch (Throwable e) {
-                            System.out.println(e.getMessage());
+                            System.out.println(e);
                         }
                     },
                     () -> System.out.println(COMMAND_NOT_FOUND_MESSAGE));

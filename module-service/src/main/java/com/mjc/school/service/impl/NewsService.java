@@ -69,7 +69,8 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
                         news.getContent(),
                         LocalDateTime.now(),
                         LocalDateTime.now(),
-                        news.getAuthorId());
+                        news.getAuthorId(),
+                        news.getTagsIds());
         News model = newsMapper.mapResponseDtoToModel(newNews);
         return newsMapper.mapModelToResponseDto(newsRepository.create(
                 model

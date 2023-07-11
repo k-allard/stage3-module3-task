@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,6 +48,7 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
         return result.get();
     }
 
+    //TODO org.hibernate.PersistentObjectException: detached entity passed to persist: com.mjc.school.repository.model.Author
     @Override
     public News create(News newNews) {
         jpaUtils.doInSessionWithTransaction(session -> session.persist(newNews));
@@ -56,18 +58,27 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
     //TODO update news tags (optional)
     @Override
     public News update(News news) {
-        jpaUtils.doInSessionWithTransaction(session ->
-                session.createQuery("update News n set " +
-                                "n.title = :newTitle, " +
-                                "n.content = :newContent, " +
-                                "n.author = :newAuthorId, " +
-                                "n.lastUpdateDate = CURRENT_TIMESTAMP " +
-                                "where n.id = :id")
-                        .setParameter("newTitle", news.getTitle())
-                        .setParameter("newContent", news.getContent())
-                        .setParameter("newAuthorId", news.getAuthor())
-                        .setParameter("id", news.getId())
-                        .executeUpdate());
+        jpaUtils.doInSessionWithTransaction(session -> {
+            News newsFromRepo = session.getReference(News.class, news.getId());
+            newsFromRepo.setTitle(news.getTitle());
+            newsFromRepo.setContent(news.getContent());
+//            newsFromRepo.setAuthor(news.getAuthor());
+            newsFromRepo.setLastUpdateDate(LocalDateTime.now());
+            newsFromRepo.setNewsTags(news.getNewsTags());
+//                session.createQuery("update News n set " +
+//                                "n.title = :newTitle, " +
+//                                "n.content = :newContent, " +
+//                                "n.author = :newAuthorId, " +
+//                                "n.newsTags = :newNewsTags, " +
+//                                "n.lastUpdateDate = CURRENT_TIMESTAMP " +
+//                                "where n.id = :id")
+//                        .setParameter("newTitle", news.getTitle())
+//                        .setParameter("newContent", news.getContent())
+//                        .setParameter("newAuthorId", news.getAuthor())
+//                        .setParameter("newNewsTags", news.getNewsTags())
+//                        .setParameter("id", news.getId())
+//                        .executeUpdate()
+        });
         return readById(news.getId()).get();
     }
 

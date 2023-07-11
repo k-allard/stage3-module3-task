@@ -74,13 +74,15 @@ public class CommandsExecutor {
                             null,
                             requestNewsTitle(),
                             requestNewsContent(),
-                            requestAuthorId()));
+                            requestAuthorId(),
+                            requestTagsIds()));
             case UPDATE_NEWS -> new UpdateNewsCommand(newsController,
                     new NewsRequestDto(
                             requestNewsId(),
                             requestNewsTitle(),
                             requestNewsContent(),
-                            requestAuthorId()));
+                            requestAuthorId(),
+                            requestTagsIds()));
             case REMOVE_NEWS_BY_ID -> new DeleteNewsCommand(newsController, requestNewsId());
             case GET_ALL_AUTHORS -> new ReadAllAuthorsCommand(authorController);
             case GET_AUTHOR_BY_ID -> new ReadAuthorByIdCommand(authorController, requestAuthorId());

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +20,8 @@ public class ServiceNewsResponseDto {
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
     private Long authorId;
+
+    private List<Long> tagsIds;
 
     @Override
     public String toString() {
