@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.List;
@@ -28,9 +30,13 @@ public class Tag implements BaseEntity<Long> {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            mappedBy = "newsTags")
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(name = "tag_news",
+            joinColumns = @JoinColumn(name = "news_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<News> news;
 
 }

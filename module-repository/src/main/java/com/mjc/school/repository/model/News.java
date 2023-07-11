@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,7 +45,10 @@ public class News implements BaseEntity<Long> {
 
     //TODO when news is removed its tags need to be removed too. rn it causes ConstraintViolationException
     //TODO when tag is removed, it need to be removed from the join-table too
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.DETACH},
+            fetch = FetchType.EAGER)
     @JoinTable(name = "tag_news",
             joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "news_id"))
