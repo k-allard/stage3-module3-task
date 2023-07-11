@@ -77,7 +77,7 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     }
 
     @Override
-    @ValidateInput  //TODO check with non-existent id : did not throw right error
+    @ValidateInput
     public ServiceNewsResponseDto update(ServiceNewsRequestDto news) {
         return newsMapper.mapModelToResponseDto(
                 newsRepository.update(
