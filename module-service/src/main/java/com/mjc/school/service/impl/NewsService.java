@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNewsResponseDto, Long>, ExtendedService {
 
-    private final NewsMapper newsMapper = new NewsMapper();
+    private final NewsMapper newsMapper;
 
     private final AuthorMapper authorMapper = new AuthorMapper();
 
@@ -37,7 +37,9 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
 
     public NewsService(@Qualifier("newsRepository")
                        BaseRepository<News, Long> newsRepository,
-                       ExtendedRepository extendedRepository) {
+                       ExtendedRepository extendedRepository,
+                       NewsMapper newsMapper) {
+        this.newsMapper = newsMapper;
         this.newsRepository = newsRepository;
         this.extendedRepository = extendedRepository;
     }
@@ -70,7 +72,7 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
                         LocalDateTime.now(),
                         LocalDateTime.now(),
                         news.getAuthorId(),
-                        news.getTagsIds());
+                        news.getNewsTagsIds());
         News model = newsMapper.mapResponseDtoToModel(newNews);
         return newsMapper.mapModelToResponseDto(newsRepository.create(
                 model

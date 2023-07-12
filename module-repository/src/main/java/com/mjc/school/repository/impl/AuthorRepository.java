@@ -33,12 +33,7 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
     public Optional<Author> readById(Long id) {
         AtomicReference<Optional<Author>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session ->
-                result.set(
-                        session.createQuery("select a from Author a where a.id = :id", Author.class)
-                                .setParameter("id", id)
-                                .getResultList()
-                                .stream().findFirst()
-                ));
+                result.set(Optional.ofNullable(session.getReference(Author.class, id))));
         return result.get();
     }
 

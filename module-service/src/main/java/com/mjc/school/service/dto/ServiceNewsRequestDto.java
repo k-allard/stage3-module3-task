@@ -16,5 +16,5 @@ public class ServiceNewsRequestDto {
     private String title;
     private String content;
     private Long authorId;
-    private List<Long> tagsIds;
+    private List<Long> newsTagsIds;
 }

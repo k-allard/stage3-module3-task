@@ -5,6 +5,7 @@ import com.mjc.school.repository.ExtendedRepository;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.Tag;
+import com.mjc.school.repository.utils.JPAUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -14,12 +15,11 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.mjc.school.repository.utils.JPAUtils;
 
 @Repository
 public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepository {
@@ -44,42 +44,41 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
     public Optional<News> readById(Long id) {
         AtomicReference<Optional<News>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session ->
-                result.set(Optional.ofNullable(session.find(News.class, id))));
+                result.set(Optional.ofNullable(session.getReference(News.class, id))));
         return result.get();
     }
 
-    //TODO org.hibernate.PersistentObjectException: detached entity passed to persist: com.mjc.school.repository.model.Author
     @Override
     public News create(News newNews) {
-        jpaUtils.doInSessionWithTransaction(session -> session.persist(newNews));
+        jpaUtils.doInSessionWithTransaction(session -> {
+            newNews.setAuthor(session.merge(newNews.getAuthor()));
+            List<Tag> newTags = new ArrayList<>();
+            for (Tag tag : newNews.getNewsTags()) {
+                newTags.add(session.merge(tag));
+            }
+            newNews.setNewsTags(newTags);
+            session.persist(newNews);
+        });
         return newNews;
     }
 
-    //TODO update news tags (optional)
     @Override
     public News update(News news) {
+        AtomicReference<News> newsAtomicReference = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session -> {
-            News newsFromRepo = session.getReference(News.class, news.getId());
+            News newsFromRepo = session.find(News.class, news.getId());
             newsFromRepo.setTitle(news.getTitle());
             newsFromRepo.setContent(news.getContent());
-//            newsFromRepo.setAuthor(news.getAuthor());
+            newsFromRepo.setAuthor(session.merge(news.getAuthor()));
             newsFromRepo.setLastUpdateDate(LocalDateTime.now());
-            newsFromRepo.setNewsTags(news.getNewsTags());
-//                session.createQuery("update News n set " +
-//                                "n.title = :newTitle, " +
-//                                "n.content = :newContent, " +
-//                                "n.author = :newAuthorId, " +
-//                                "n.newsTags = :newNewsTags, " +
-//                                "n.lastUpdateDate = CURRENT_TIMESTAMP " +
-//                                "where n.id = :id")
-//                        .setParameter("newTitle", news.getTitle())
-//                        .setParameter("newContent", news.getContent())
-//                        .setParameter("newAuthorId", news.getAuthor())
-//                        .setParameter("newNewsTags", news.getNewsTags())
-//                        .setParameter("id", news.getId())
-//                        .executeUpdate()
+            List<Tag> newTags = new ArrayList<>();
+            for (Tag tag : news.getNewsTags()) {
+                newTags.add(session.merge(tag));
+            }
+            newsFromRepo.setNewsTags(newTags);
+            newsAtomicReference.set(newsFromRepo);
         });
-        return readById(news.getId()).get();
+        return newsAtomicReference.get();
     }
 
     @Override

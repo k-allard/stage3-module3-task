@@ -21,12 +21,13 @@ public class ServiceNewsResponseDto {
     private LocalDateTime lastUpdateDate;
     private Long authorId;
 
-    private List<Long> tagsIds;
+    private List<Long> newsTagsIds;
 
     @Override
     public String toString() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
         return "NewsDTOResponse[" +
                 "id=" + id +
