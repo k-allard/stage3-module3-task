@@ -33,7 +33,7 @@ public class TagRepository implements BaseRepository<Tag, Long> {
     public Optional<Tag> readById(Long id) {
         AtomicReference<Optional<Tag>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session ->
-                result.set(Optional.ofNullable(session.getReference(Tag.class, id))));
+                result.set(Optional.ofNullable(session.find(Tag.class, id))));
         return result.get();
     }
 

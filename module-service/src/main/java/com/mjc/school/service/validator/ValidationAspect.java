@@ -42,6 +42,9 @@ public class ValidationAspect {
             log.debug("Started executing validateInput advice for NewsRequestDto parameter");
             newsValidator.validateNewsDTORequest(news);
             newsValidator.validateAuthorId(news.getAuthorId());
+            for (Long tag : news.getNewsTagsIds()){
+                tagValidator.validateTagId(tag);
+            }
             if (joinPoint.getSignature().getName().equals("update")) {
                 newsValidator.validateNewsId(news.getId());
             }
@@ -50,8 +53,10 @@ public class ValidationAspect {
             String className = joinPoint.getSourceLocation().getWithinType().getTypeName();
             if (className.contains("AuthorService"))
                 authorValidator.validateAuthorId(id);
-            else if (className.contains("NewsService"))
+            else if (className.contains("NewsService")) {
+                log.debug("Invoking NewsValidator. . .");
                 newsValidator.validateNewsId(id);
+            }
             else if (className.contains("TagService"))
                 tagValidator.validateTagId(id);
             else {

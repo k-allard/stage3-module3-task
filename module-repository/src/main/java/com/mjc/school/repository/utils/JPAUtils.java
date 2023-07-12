@@ -28,6 +28,8 @@ public class JPAUtils {
         } catch (Exception e) {
             t.rollback();
             throw e;
+        } finally {
+            session.close();
         }
     }
 }
