@@ -118,7 +118,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response = commandsReader.requestResponseByPrompt("Enter news id:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty newsId - correct scenario, should be handled");
+            log.debug("Received empty newsId");
             return null;
         }
         try {
@@ -133,7 +133,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response = commandsReader.requestResponseByPrompt("Enter author id:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty authorId - correct scenario, should be handled");
+            log.debug("Received empty authorId");
             return null;
         }
         try {
@@ -148,7 +148,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response = commandsReader.requestResponseByPrompt("Enter news content:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty newsContent - correct scenario, should be handled");
+            log.debug("Received empty newsContent");
             return null;
         }
         return response;
@@ -158,7 +158,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response = commandsReader.requestResponseByPrompt("Enter news title:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty newsTitle - correct scenario, should be handled");
+            log.debug("Received empty newsTitle");
             return null;
         }
         return response;
@@ -168,7 +168,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response =  commandsReader.requestResponseByPrompt("Enter author name:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty newsTitle - correct scenario, should be handled");
+            log.debug("Received empty newsTitle");
             return null;
         }
         return response;
@@ -178,7 +178,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response = commandsReader.requestResponseByPrompt("Enter tags ids separated by space:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty tagsIds - correct scenario, should be handled");
+            log.debug("Received empty tagsIds");
             return null;
         }
         String[] ids = response.split(" ");
@@ -198,7 +198,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response = commandsReader.requestResponseByPrompt("Enter tag name:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty tagName - correct scenario, should be handled");
+            log.debug("Received empty tagName");
             return null;
         }
         return response;
@@ -208,7 +208,7 @@ public class CommandsExecutor {
         commandsReader.printIfRequired(required);
         String response = commandsReader.requestResponseByPrompt("Enter tag id:");
         if (!required && (response.length() == 0 || response.equals("-"))) {
-            log.debug("Received empty tagId - correct scenario, should be handled");
+            log.debug("Received empty tagId");
             return null;
         }
         try {
