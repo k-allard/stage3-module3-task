@@ -41,7 +41,8 @@ public class ValidationAspect {
         } else if (requestObject[0] instanceof ServiceNewsRequestDto news) {
             log.debug("Started executing validateInput advice for NewsRequestDto parameter");
             newsValidator.validateNewsDTORequest(news);
-            newsValidator.validateAuthorId(news.getAuthorId());
+            if (news.getAuthorId() != null)
+                newsValidator.validateAuthorId(news.getAuthorId());
             for (Long tag : news.getNewsTagsIds()){
                 tagValidator.validateTagId(tag);
             }

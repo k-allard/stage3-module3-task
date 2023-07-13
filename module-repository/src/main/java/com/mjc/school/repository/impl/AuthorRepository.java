@@ -31,6 +31,8 @@ public class AuthorRepository implements BaseRepository<Author, Long> {
 
     @Override
     public Optional<Author> readById(Long id) {
+        if (id == null)
+            return Optional.empty();
         AtomicReference<Optional<Author>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session ->
                 result.set(Optional.ofNullable(session.find(Author.class, id))));

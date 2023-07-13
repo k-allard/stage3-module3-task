@@ -28,6 +28,7 @@ import com.mjc.school.controller.dto.NewsRequestDto;
 import com.mjc.school.controller.dto.NewsResponseDto;
 import com.mjc.school.controller.dto.TagDto;
 import com.mjc.school.exceptions.IdFormatException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Slf4j
 public class CommandsExecutor {
 
     private final BaseController<NewsRequestDto, NewsResponseDto, Long> newsController;
@@ -68,53 +70,119 @@ public class CommandsExecutor {
     private Command getCommandClassImpl(CommandType commandType) {
         return switch (commandType) {
             case GET_ALL_NEWS -> new ReadAllNewsCommand(newsController);
-            case GET_NEWS_BY_ID -> new ReadNewsByIdCommand(newsController, requestNewsId());
+            case GET_NEWS_BY_ID -> new ReadNewsByIdCommand(newsController, requestNewsId(true));
             case CREATE_NEWS -> new CreateNewsCommand(newsController,
                     new NewsRequestDto(
                             null,
-                            requestNewsTitle(),
-                            requestNewsContent(),
-                            requestAuthorId(),
-                            requestTagsIds()));
+                            requestNewsTitle(true),
+                            requestNewsContent(true),
+                            requestAuthorId(false),
+                            requestTagsIds(false)));
             case UPDATE_NEWS -> new UpdateNewsCommand(newsController,
                     new NewsRequestDto(
-                            requestNewsId(),
-                            requestNewsTitle(),
-                            requestNewsContent(),
-                            requestAuthorId(),
-                            requestTagsIds()));
-            case REMOVE_NEWS_BY_ID -> new DeleteNewsCommand(newsController, requestNewsId());
+                            requestNewsId(true),
+                            requestNewsTitle(false),
+                            requestNewsContent(false),
+                            requestAuthorId(false),
+                            requestTagsIds(false)));
+            case REMOVE_NEWS_BY_ID -> new DeleteNewsCommand(newsController, requestNewsId(true));
             case GET_ALL_AUTHORS -> new ReadAllAuthorsCommand(authorController);
-            case GET_AUTHOR_BY_ID -> new ReadAuthorByIdCommand(authorController, requestAuthorId());
+            case GET_AUTHOR_BY_ID -> new ReadAuthorByIdCommand(authorController, requestAuthorId(true));
             case CREATE_AUTHOR -> new CreateAuthorCommand(authorController,
                     new AuthorRequestDto(
                             null,
-                            requestAuthorName()));
+                            requestAuthorName(true)));
             case UPDATE_AUTHOR -> new UpdateAuthorCommand(authorController,
                     new AuthorRequestDto(
-                            requestAuthorId(),
-                            requestAuthorName()));
-            case REMOVE_AUTHOR_BY_ID -> new DeleteAuthorCommand(authorController, requestAuthorId());
+                            requestAuthorId(true),
+                            requestAuthorName(true)));
+            case REMOVE_AUTHOR_BY_ID -> new DeleteAuthorCommand(authorController, requestAuthorId(true));
             case GET_ALL_TAGS -> new ReadAllTagsCommand(tagController);
-            case GET_TAG_BY_ID -> new ReadTagByIdCommand(tagController, requestTagId());
-            case CREATE_TAG -> new CreateTagCommand(tagController, new TagDto(null, requestTagName()));
-            case UPDATE_TAG -> new UpdateTagCommand(tagController, new TagDto(requestTagId(), requestTagName()));
-            case REMOVE_TAG_BY_ID -> new DeleteTagCommand(tagController, requestTagId());
-            case GET_AUTHOR_BY_NEWS_ID -> new ReadAuthorByNewsIdCommand(extendedController, requestNewsId());
-            case GET_TAGS_BY_NEWS_ID -> new ReadTagByNewsIdCommand(extendedController, requestNewsId());
+            case GET_TAG_BY_ID -> new ReadTagByIdCommand(tagController, requestTagId(true));
+            case CREATE_TAG -> new CreateTagCommand(tagController, new TagDto(null, requestTagName(true)));
+            case UPDATE_TAG -> new UpdateTagCommand(tagController, new TagDto(requestTagId(true), requestTagName(true)));
+            case REMOVE_TAG_BY_ID -> new DeleteTagCommand(tagController, requestTagId(true));
+            case GET_AUTHOR_BY_NEWS_ID -> new ReadAuthorByNewsIdCommand(extendedController, requestNewsId(true));
+            case GET_TAGS_BY_NEWS_ID -> new ReadTagByNewsIdCommand(extendedController, requestNewsId(true));
             case GET_NEWS_BY_PARAMS -> new ReadNewsByParamsCommand(extendedController,
-                    requestTagsIds(),
-                    requestTagName(),
-                    requestAuthorName(),
-                    requestNewsTitle(),
-                    requestNewsContent());
+                    requestTagsIds(false),
+                    requestTagName(false),
+                    requestAuthorName(false),
+                    requestNewsTitle(false),
+                    requestNewsContent(false));
             default -> throw new IllegalStateException("Unexpected commandType: " + commandType);
         };
     }
 
-    private List<Long> requestTagsIds() {
+    private Long requestNewsId(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response = commandsReader.requestResponseByPrompt("Enter news id:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty newsId - correct scenario, should be handled");
+            return null;
+        }
+        try {
+            return Long.parseLong(response);
+        } catch (NumberFormatException e) {
+            throw new IdFormatException(
+                    "ERROR_CODE: 05 ERROR_MESSAGE: News id should be number");
+        }
+    }
+
+    private Long requestAuthorId(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response = commandsReader.requestResponseByPrompt("Enter author id:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty authorId - correct scenario, should be handled");
+            return null;
+        }
+        try {
+            return Long.parseLong(response);
+        } catch (NumberFormatException e) {
+            throw new IdFormatException(
+                    "ERROR_CODE: 05 ERROR_MESSAGE: Author id should be number");
+        }
+    }
+
+    private String requestNewsContent(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response = commandsReader.requestResponseByPrompt("Enter news content:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty newsContent - correct scenario, should be handled");
+            return null;
+        }
+        return response;
+    }
+
+    private String requestNewsTitle(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response = commandsReader.requestResponseByPrompt("Enter news title:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty newsTitle - correct scenario, should be handled");
+            return null;
+        }
+        return response;
+    }
+
+    private String requestAuthorName(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response =  commandsReader.requestResponseByPrompt("Enter author name:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty newsTitle - correct scenario, should be handled");
+            return null;
+        }
+        return response;
+    }
+
+    private List<Long> requestTagsIds(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response = commandsReader.requestResponseByPrompt("Enter tags ids separated by space:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty tagsIds - correct scenario, should be handled");
+            return null;
+        }
+        String[] ids = response.split(" ");
         List<Long> result = new ArrayList<>();
-        String[] ids = commandsReader.requestResponseByPrompt("Enter tags ids separated by space:").split(" ");
         for (String id : ids) {
             try {
                 result.add(Long.parseLong(id));
@@ -126,47 +194,28 @@ public class CommandsExecutor {
         return result;
     }
 
-    private String requestTagName() {
-        return commandsReader.requestResponseByPrompt("Enter tag name:");
+    private String requestTagName(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response = commandsReader.requestResponseByPrompt("Enter tag name:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty tagName - correct scenario, should be handled");
+            return null;
+        }
+        return response;
     }
 
-    private Long requestTagId() {
+    private Long requestTagId(boolean required) {
+        commandsReader.printIfRequired(required);
+        String response = commandsReader.requestResponseByPrompt("Enter tag id:");
+        if (!required && (response.length() == 0 || response.equals("-"))) {
+            log.debug("Received empty tagId - correct scenario, should be handled");
+            return null;
+        }
         try {
-            return Long.parseLong(commandsReader.requestResponseByPrompt("Enter tag id:"));
+            return Long.parseLong(response);
         } catch (NumberFormatException e) {
             throw new IdFormatException(
                     "ERROR_CODE: 05 ERROR_MESSAGE: Tag id should be number");
         }
     }
-
-    private long requestNewsId() {
-        try {
-            return Long.parseLong(commandsReader.requestResponseByPrompt("Enter news id:"));
-        } catch (NumberFormatException e) {
-            throw new IdFormatException(
-                    "ERROR_CODE: 05 ERROR_MESSAGE: News id should be number");
-        }
-    }
-
-    private long requestAuthorId() {
-        try {
-            return Long.parseLong(commandsReader.requestResponseByPrompt("Enter author id:"));
-        } catch (NumberFormatException e) {
-            throw new IdFormatException(
-                    "ERROR_CODE: 05 ERROR_MESSAGE: Author id should be number");
-        }
-    }
-
-    private String requestNewsContent() {
-        return commandsReader.requestResponseByPrompt("Enter news content:");
-    }
-
-    private String requestNewsTitle() {
-        return commandsReader.requestResponseByPrompt("Enter news title:");
-    }
-
-    private String requestAuthorName() {
-        return commandsReader.requestResponseByPrompt("Enter author name:");
-    }
-
 }

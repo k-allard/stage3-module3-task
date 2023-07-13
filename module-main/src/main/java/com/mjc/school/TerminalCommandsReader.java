@@ -7,10 +7,11 @@ import java.util.Scanner;
 
 public class TerminalCommandsReader {
 
-    private static final String PROMPT_ENTER_NUMBER_OF_OPERATION
-            = "_____________________________\n" +
+    private static final String PROMPT_ENTER_NUMBER_OF_OPERATION =
+            "_____________________________\n" +
             "Enter the number of operation:";
-
+    private static final String NOT_REQUIRED_INFO =
+            "Next is NOT required. You can leave it blank or put '-'";
     private final Scanner sc = new Scanner(System.in);
 
     public Optional<CommandType> getCommand() {
@@ -25,6 +26,12 @@ public class TerminalCommandsReader {
             }
         }
         return Optional.empty();
+    }
+
+    public void printIfRequired(boolean required) {
+        if (!required) {
+            System.out.println(NOT_REQUIRED_INFO);
+        }
     }
 
     public String requestResponseByPrompt(String prompt) {

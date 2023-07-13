@@ -51,12 +51,15 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
     @Override
     public News create(News newNews) {
         jpaUtils.doInSessionWithTransaction(session -> {
-            newNews.setAuthor(session.merge(newNews.getAuthor()));
-            List<Tag> newTags = new ArrayList<>();
-            for (Tag tag : newNews.getNewsTags()) {
-                newTags.add(session.merge(tag));
+            if (newNews.getAuthor() != null)
+                newNews.setAuthor(session.merge(newNews.getAuthor()));
+            if (newNews.getNewsTags() != null) {
+                List<Tag> newTags = new ArrayList<>();
+                for (Tag tag : newNews.getNewsTags()) {
+                    newTags.add(session.merge(tag));
+                }
+                newNews.setNewsTags(newTags);
             }
-            newNews.setNewsTags(newTags);
             session.persist(newNews);
         });
         return newNews;
@@ -97,7 +100,6 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
         return readById(id).isPresent();
     }
 
-    //TODO permit empty (not each should be present) params
     @Override
     public List<News> readNewsByParams(List<Long> tagsIds,
                                        String tagName,
