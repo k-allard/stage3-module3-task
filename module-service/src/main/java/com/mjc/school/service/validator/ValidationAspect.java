@@ -43,8 +43,10 @@ public class ValidationAspect {
             newsValidator.validateNewsDTORequest(news);
             if (news.getAuthorId() != null)
                 newsValidator.validateAuthorId(news.getAuthorId());
-            for (Long tag : news.getNewsTagsIds()){
-                tagValidator.validateTagId(tag);
+            if (news.getNewsTagsIds() != null) {
+                for (Long tag : news.getNewsTagsIds()) {
+                    tagValidator.validateTagId(tag);
+                }
             }
             if (joinPoint.getSignature().getName().equals("update")) {
                 newsValidator.validateNewsId(news.getId());
