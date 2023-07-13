@@ -45,12 +45,14 @@ public class NewsMapper {
 
     public News mapRequestDtoToModel(ServiceNewsRequestDto news) {
         News newsModel = mapper.map(news, News.class);
-        newsModel.setAuthor(authorRepository.readById(news.getAuthorId()).get());
-        List<Tag> tagsModels = new ArrayList<>();
-        for (Long tagId : news.getNewsTagsIds()) {
-            tagsModels.add(tagRepository.readById(tagId).get());
+        newsModel.setAuthor(authorRepository.readById(news.getAuthorId()).orElse(null));
+        if (news.getNewsTagsIds() != null) {
+            List<Tag> tagsModels = new ArrayList<>();
+            for (Long tagId : news.getNewsTagsIds()) {
+                tagsModels.add(tagRepository.readById(tagId).get());
+            }
+            newsModel.setNewsTags(tagsModels);
         }
-        newsModel.setNewsTags(tagsModels);
         return newsModel;
     }
 }

@@ -70,15 +70,20 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
         AtomicReference<News> newsAtomicReference = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session -> {
             News newsFromRepo = session.find(News.class, news.getId());
-            newsFromRepo.setTitle(news.getTitle());
-            newsFromRepo.setContent(news.getContent());
-            newsFromRepo.setAuthor(session.merge(news.getAuthor()));
-            newsFromRepo.setLastUpdateDate(LocalDateTime.now());
-            List<Tag> newTags = new ArrayList<>();
-            for (Tag tag : news.getNewsTags()) {
-                newTags.add(session.merge(tag));
+            if (news.getTitle() != null)
+                newsFromRepo.setTitle(news.getTitle());
+            if (news.getContent() != null)
+                newsFromRepo.setContent(news.getContent());
+            if (news.getAuthor() != null)
+                newsFromRepo.setAuthor(session.merge(news.getAuthor()));
+            if (news.getNewsTags() != null) {
+                List<Tag> newTags = new ArrayList<>();
+                for (Tag tag : news.getNewsTags()) {
+                    newTags.add(session.merge(tag));
+                }
+                newsFromRepo.setNewsTags(newTags);
             }
-            newsFromRepo.setNewsTags(newTags);
+            newsFromRepo.setLastUpdateDate(LocalDateTime.now());
             newsAtomicReference.set(newsFromRepo);
         });
         return newsAtomicReference.get();

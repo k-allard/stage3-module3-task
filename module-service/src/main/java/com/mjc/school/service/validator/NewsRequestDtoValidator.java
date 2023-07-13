@@ -27,8 +27,10 @@ public class NewsRequestDtoValidator {
 
 
     public void validateNewsDTORequest(ServiceNewsRequestDto dto) {
-        checkNewsTitle(dto.getTitle());
-        checkNewsContent(dto.getContent());
+        if (dto.getTitle() != null)
+            checkNewsTitle(dto.getTitle());
+        if (dto.getContent() != null)
+            checkNewsContent(dto.getContent());
     }
 
     public void validateNewsId(Long id) {
