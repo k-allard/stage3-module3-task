@@ -136,4 +136,15 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
         });
         return resultNewsList.get();
     }
+
+    @Override
+    public List<Tag> getTagsByNewsId(Long newsId) {
+        AtomicReference<List<Tag>> result = new AtomicReference<>();
+        jpaUtils.doInSessionWithTransaction(session -> {
+            List<Tag> newsTags = session.find(News.class, newsId).getNewsTags();
+            newsTags.size();
+            result.set(newsTags);
+        });
+        return result.get();
+    }
 }

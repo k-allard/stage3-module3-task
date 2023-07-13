@@ -110,9 +110,8 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     @Override
     @ValidateInput
     public List<ServiceTagDto> readTagsByNewsId(Long id) {
-        List<Tag> tags = newsRepository.readById(id).get().getNewsTags();
         List<ServiceTagDto> tagDtos = new ArrayList<>();
-        for (Tag tag : tags) {
+        for (Tag tag : extendedRepository.getTagsByNewsId(id)) {
             tagDtos.add(tagMapper.mapModelToServiceDto(tag));
         }
         return tagDtos;
