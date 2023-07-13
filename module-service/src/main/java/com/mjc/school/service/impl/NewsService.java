@@ -33,15 +33,20 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
 
     private final BaseRepository<News, Long> newsRepository;
 
+    private final BaseRepository<Author, Long> authorRepository;
+
     private final ExtendedRepository extendedRepository;
 
     public NewsService(@Qualifier("newsRepository")
                        BaseRepository<News, Long> newsRepository,
                        ExtendedRepository extendedRepository,
-                       NewsMapper newsMapper) {
+                       NewsMapper newsMapper,
+                       @Qualifier("authorRepository")
+                       BaseRepository<Author, Long> authorRepository) {
         this.newsMapper = newsMapper;
         this.newsRepository = newsRepository;
         this.extendedRepository = extendedRepository;
+        this.authorRepository = authorRepository;
     }
 
     @Override
@@ -97,7 +102,8 @@ public class NewsService implements BaseService<ServiceNewsRequestDto, ServiceNe
     @Override
     @ValidateInput
     public ServiceAuthorResponseDto readAuthorByNewsId(Long id) {
-        Author authorModel = newsRepository.readById(id).get().getAuthor();
+        Author authorModel = authorRepository.readById(
+                newsRepository.readById(id).get().getAuthor().getId()).get();
         return authorMapper.mapModelToResponseDto(authorModel);
     }
 
