@@ -9,10 +9,13 @@ import com.mjc.school.repository.utils.JPAUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -111,37 +114,38 @@ public class NewsRepository implements BaseRepository<News, Long>, ExtendedRepos
                                        String authorName,
                                        String title,
                                        String content) {
-        AtomicReference<List<News>> resultNewsList = new AtomicReference<>();
+        AtomicReference<List<News>> result = new AtomicReference<>();
         jpaUtils.doInSessionWithTransaction(session -> {
+
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<News> query = criteriaBuilder.createQuery(News.class);
-            Root<News> news = query.from(News.class);
-            CriteriaQuery<News> selectQuery = query.select(news);
-            if (!ObjectUtils.isEmpty(title)) {
-                selectQuery.where(
-                        criteriaBuilder.like(news.get("title"), "%" + title + "%"));
+            CriteriaQuery<News> criteriaQuery = criteriaBuilder.createQuery(News.class);
+            Root<News> root = criteriaQuery.from(News.class);
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (tagName != null || tagsIds != null) {
+                Join<Tag, News> newsTags = root.join("tags");
+                if (tagName != null) {
+                    predicates.add(newsTags.get("name").in(tagName));
+                }
+                if (tagsIds != null) {
+                    predicates.add(newsTags.get("id").in(tagsIds));
+                }
             }
-            if (!ObjectUtils.isEmpty(content)) {
-                selectQuery.where(
-                        criteriaBuilder.like(news.get("content"), "%" + content + "%"));
+            if (authorName != null) {
+                Join<Author, News> newsAuthor = root.join("author");
+                predicates.add(criteriaBuilder.equal(newsAuthor.get("name"), authorName));
             }
-            if (!ObjectUtils.isEmpty(authorName)) {
-                Join<News, Author> authorJoin = news.join("author", JoinType.INNER);
-                selectQuery.where(
-                        criteriaBuilder.like(authorJoin.get("name"), "%" + authorName + "%"));
+            if (title != null) {
+                predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%"));
             }
-            if (!ObjectUtils.isEmpty(tagName)) {
-                Join<News, Tag> tagJoin = news.join("newsTags", JoinType.INNER);
-                selectQuery.where(
-                        criteriaBuilder.like(tagJoin.get("name"), "%" + tagName + "%"));
+            if (content != null) {
+                predicates.add(criteriaBuilder.like(root.get("content"), "%" + content + "%"));
             }
-            if (!ObjectUtils.isEmpty(tagsIds)) {
-                Join<News, Tag> tagJoin = news.join("newsTags", JoinType.INNER);
-                selectQuery.where(tagJoin.get("id").in(tagsIds)).distinct(true);
-            }
-            resultNewsList.set(session.createQuery(selectQuery).getResultList());
+            criteriaQuery.select(root).distinct(true).where(predicates.toArray(new Predicate[0]));
+            result.set(session.createQuery(criteriaQuery).getResultList());
         });
-        return resultNewsList.get();
+        return result.get();
     }
 
     @Override
